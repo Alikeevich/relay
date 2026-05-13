@@ -15,7 +15,7 @@ export function Footer() {
           </div>
           <p className="mt-4 max-w-xs text-sm text-muted">
             Reliable delivery layer for LLM APIs. Built at the edge so your AI
-            agents stay up no matter who's down.
+            agents stay up no matter who&apos;s down.
           </p>
           <div className="mt-6 flex items-center gap-2">
             <Social icon={IconBrandGithub} href="#" />
