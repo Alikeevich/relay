@@ -63,10 +63,10 @@ export function HowItWorks() {
         ref={sectionRef}
         className="relative mx-auto mt-16 max-w-5xl px-6"
       >
-        <div className="absolute left-[34px] top-0 hidden h-full w-px bg-border md:block lg:left-[42px]" />
+        <div className="absolute left-[calc(1.5rem+40px)] top-0 hidden h-full w-px -translate-x-1/2 bg-border md:block lg:left-[calc(1.5rem+50px)]" />
         <motion.div
           style={{ height: lineHeight }}
-          className="absolute left-[34px] top-0 hidden w-px bg-gradient-to-b from-accent via-accent-2 to-transparent md:block lg:left-[42px]"
+          className="absolute left-[calc(1.5rem+40px)] top-0 hidden w-px -translate-x-1/2 bg-gradient-to-b from-accent via-accent-2 to-transparent md:block lg:left-[calc(1.5rem+50px)]"
         />
 
         <div className="space-y-24">

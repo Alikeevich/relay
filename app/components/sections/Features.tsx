@@ -152,20 +152,20 @@ function IconHeader({ icon: Icon }: { icon: typeof IconBolt }) {
 
 function FailoverViz() {
   return (
-    <div className="relative h-32 w-full overflow-hidden rounded-2xl border border-border bg-bg/60 p-4">
-      <div className="flex h-full items-center justify-between gap-4">
+    <div className="relative h-36 w-full overflow-hidden rounded-2xl border border-border bg-bg/60 px-4 py-5">
+      <div className="flex h-full items-center justify-between gap-3">
         <Node label="Anthropic" status="down" />
-        <div className="relative h-px flex-1">
+        <div className="relative h-px min-w-0 flex-1">
           <div className="absolute inset-0 bg-gradient-to-r from-danger/60 via-accent/60 to-success/60" />
           <motion.div
-            initial={{ x: "0%" }}
-            animate={{ x: "calc(100% - 8px)" }}
+            initial={{ left: 0 }}
+            animate={{ left: "calc(100% - 8px)" }}
             transition={{ duration: 2.4, repeat: Infinity, ease: "linear" }}
             className="absolute top-1/2 h-2 w-2 -translate-y-1/2 rounded-full bg-accent shadow-[0_0_12px_rgba(167,139,250,0.8)]"
           />
         </div>
         <Node label="Relay" status="ok" middle />
-        <div className="relative h-px flex-1">
+        <div className="relative h-px min-w-0 flex-1">
           <div className="absolute inset-0 bg-gradient-to-r from-success/60 to-success" />
         </div>
         <Node label="OpenAI" status="ok" />
@@ -188,13 +188,13 @@ function Node({
       ? "bg-success shadow-[0_0_10px_rgba(52,211,153,0.7)]"
       : "bg-danger shadow-[0_0_10px_rgba(251,113,133,0.7)]";
   return (
-    <div className="flex flex-col items-center gap-2">
+    <div className="flex shrink-0 flex-col items-center gap-2">
       <div
         className={`flex h-10 w-10 items-center justify-center rounded-xl border ${middle ? "border-accent/40 bg-accent/10" : "border-border bg-white/[0.04]"}`}
       >
         <span className={`h-2 w-2 rounded-full ${dot}`} />
       </div>
-      <span className="text-[10px] uppercase tracking-wider text-muted">
+      <span className="whitespace-nowrap text-[10px] uppercase tracking-wider text-muted">
         {label}
       </span>
     </div>
@@ -207,18 +207,23 @@ function DashboardViz() {
     <div className="relative h-32 w-full overflow-hidden rounded-2xl border border-border bg-bg/60 p-4">
       <div className="flex h-full items-end gap-1.5">
         {bars.map((h, i) => (
-          <motion.div
+          <div
             key={i}
-            initial={{ height: 0 }}
-            whileInView={{ height: `${h}%` }}
-            viewport={{ once: true, margin: "-40px" }}
-            transition={{
-              duration: 0.7,
-              delay: i * 0.04,
-              ease: [0.22, 1, 0.36, 1],
-            }}
-            className="flex-1 rounded-t-sm bg-gradient-to-t from-accent/60 to-accent-2/60"
-          />
+            className="flex h-full flex-1 items-end"
+          >
+            <motion.div
+              initial={{ scaleY: 0 }}
+              whileInView={{ scaleY: 1 }}
+              viewport={{ once: true, margin: "-40px" }}
+              transition={{
+                duration: 0.7,
+                delay: i * 0.04,
+                ease: [0.22, 1, 0.36, 1],
+              }}
+              style={{ height: `${h}%`, transformOrigin: "bottom" }}
+              className="w-full rounded-t-sm bg-gradient-to-t from-accent/60 to-accent-2/60"
+            />
+          </div>
         ))}
       </div>
       <div className="absolute right-4 top-3 rounded-full border border-border bg-bg/80 px-2 py-0.5 font-mono text-[10px] text-muted backdrop-blur">
