@@ -95,7 +95,7 @@ function Step({
   const glow = useTransform(scrollYProgress, [0, 0.5], [0, 1]);
 
   return (
-    <div ref={ref} className="grid grid-cols-1 gap-6 md:grid-cols-[80px_1fr] md:gap-10 lg:grid-cols-[100px_1fr]">
+    <div ref={ref} className="relative grid grid-cols-1 gap-6 md:grid-cols-[80px_1fr] md:gap-10 lg:grid-cols-[100px_1fr]">
       <div className="flex justify-start md:justify-center">
         <motion.div
           style={{ scale }}

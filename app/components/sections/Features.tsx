@@ -152,11 +152,12 @@ function IconHeader({ icon: Icon }: { icon: typeof IconBolt }) {
 
 function FailoverViz() {
   return (
-    <div className="relative h-36 w-full overflow-hidden rounded-2xl border border-border bg-bg/60 px-4 py-5">
-      <div className="flex h-full items-center justify-between gap-3">
-        <Node label="Anthropic" status="down" />
-        <div className="relative h-px min-w-0 flex-1">
-          <div className="absolute inset-0 bg-gradient-to-r from-danger/60 via-accent/60 to-success/60" />
+    <div className="relative w-full overflow-hidden rounded-2xl border border-border bg-bg/60 px-6 py-5">
+      <div className="grid grid-cols-[auto_1fr_auto_1fr_auto] items-center gap-x-4">
+        {/* Row 1 — icons + connectors, all centered on the same axis */}
+        <NodeIcon status="down" />
+        <div className="relative h-px min-w-0 overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-r from-danger/60 via-accent/70 to-success/60" />
           <motion.div
             initial={{ left: 0 }}
             animate={{ left: "calc(100% - 8px)" }}
@@ -164,40 +165,61 @@ function FailoverViz() {
             className="absolute top-1/2 h-2 w-2 -translate-y-1/2 rounded-full bg-accent shadow-[0_0_12px_rgba(167,139,250,0.8)]"
           />
         </div>
-        <Node label="Relay" status="ok" middle />
-        <div className="relative h-px min-w-0 flex-1">
+        <NodeIcon status="ok" middle />
+        <div className="relative h-px min-w-0 overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-r from-success/60 to-success" />
         </div>
-        <Node label="OpenAI" status="ok" />
+        <NodeIcon status="ok" />
+        {/* Row 2 — labels share columns with the icons so they sit exactly under them */}
+        <NodeLabel>Anthropic</NodeLabel>
+        <span />
+        <NodeLabel middle>Relay</NodeLabel>
+        <span />
+        <NodeLabel>OpenAI</NodeLabel>
       </div>
     </div>
   );
 }
 
-function Node({
-  label,
+function NodeIcon({
   status,
   middle,
 }: {
-  label: string;
   status: "ok" | "down";
   middle?: boolean;
 }) {
   const dot =
     status === "ok"
-      ? "bg-success shadow-[0_0_10px_rgba(52,211,153,0.7)]"
-      : "bg-danger shadow-[0_0_10px_rgba(251,113,133,0.7)]";
+      ? "bg-success shadow-[0_0_10px_rgba(52,211,153,0.8)]"
+      : "bg-danger shadow-[0_0_10px_rgba(251,113,133,0.8)]";
   return (
-    <div className="flex shrink-0 flex-col items-center gap-2">
+    <div className="flex justify-center">
       <div
-        className={`flex h-10 w-10 items-center justify-center rounded-xl border ${middle ? "border-accent/40 bg-accent/10" : "border-border bg-white/[0.04]"}`}
+        className={`flex h-10 w-10 items-center justify-center rounded-xl border ${
+          middle
+            ? "border-accent/60 bg-accent/15 shadow-[0_0_16px_-4px_rgba(167,139,250,0.4)]"
+            : "border-border-strong bg-white/[0.06]"
+        }`}
       >
         <span className={`h-2 w-2 rounded-full ${dot}`} />
       </div>
-      <span className="whitespace-nowrap text-[10px] uppercase tracking-wider text-muted">
-        {label}
-      </span>
     </div>
+  );
+}
+
+function NodeLabel({
+  children,
+  middle,
+}: {
+  children: React.ReactNode;
+  middle?: boolean;
+}) {
+  return (
+    <span
+      className={`mt-2.5 block text-center text-[10px] uppercase tracking-[0.18em] ${middle ? "text-fg" : "text-muted"}`}
+    >
+      {children}
+    </span>
   );
 }
 
