@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useInView } from "motion/react";
+import { motion, useInView, type Variants } from "motion/react";
 import { useRef } from "react";
 import {
   IconBolt,
@@ -30,7 +30,7 @@ export function Features() {
           </h2>
         </Reveal>
 
-        <div className="mt-16 grid grid-cols-1 gap-4 md:grid-cols-3 md:grid-rows-[260px_220px_220px] lg:grid-rows-[280px_240px]">
+        <div className="mt-16 grid grid-cols-1 gap-4 md:grid-cols-3 md:grid-rows-[320px_300px_240px] lg:grid-rows-[340px_320px_260px]">
           <BentoCard className="md:col-span-2 md:row-span-1">
             <div className="flex h-full flex-col justify-between gap-6">
               <div>
@@ -152,25 +152,41 @@ function IconHeader({ icon: Icon }: { icon: typeof IconBolt }) {
 
 function FailoverViz() {
   return (
-    <div className="relative w-full overflow-hidden rounded-2xl border border-border bg-bg/60 px-6 py-5">
-      <div className="grid grid-cols-[auto_1fr_auto_1fr_auto] items-center gap-x-4">
-        {/* Row 1 — icons + connectors, all centered on the same axis */}
-        <NodeIcon status="down" />
-        <div className="relative h-px min-w-0 overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-r from-danger/60 via-accent/70 to-success/60" />
+    <div className="relative w-full overflow-hidden rounded-2xl border border-border bg-bg/60 px-6 py-6">
+      {/* Row 1 — icons. The connecting line spans the FULL width across all
+          three icons (Anthropic → Relay → OpenAI), and the animated packet
+          travels along it; icons sit on top of the line with opaque
+          backgrounds so the line is "hidden" inside each icon. */}
+      <div className="relative grid grid-cols-[40px_1fr_40px_1fr_40px] items-center gap-x-4">
+        {/* Continuous line + travelling packet — anchored between the first
+            and last icon centers (left:20px, right:20px = half icon width) */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute left-[20px] right-[20px] top-1/2 h-px -translate-y-1/2"
+        >
+          <div className="absolute inset-0 bg-gradient-to-r from-danger/70 via-accent/80 to-success/70" />
           <motion.div
             initial={{ left: 0 }}
-            animate={{ left: "calc(100% - 8px)" }}
-            transition={{ duration: 2.4, repeat: Infinity, ease: "linear" }}
-            className="absolute top-1/2 h-2 w-2 -translate-y-1/2 rounded-full bg-accent shadow-[0_0_12px_rgba(167,139,250,0.8)]"
+            animate={{ left: "100%" }}
+            transition={{
+              duration: 2.6,
+              repeat: Infinity,
+              repeatDelay: 0.4,
+              ease: [0.65, 0, 0.35, 1],
+            }}
+            className="absolute top-1/2 h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent shadow-[0_0_16px_2px_rgba(167,139,250,0.9)]"
           />
         </div>
+        {/* Icons — z-10 so they cover the line behind them */}
+        <NodeIcon status="down" />
+        <span />
         <NodeIcon status="ok" middle />
-        <div className="relative h-px min-w-0 overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-r from-success/60 to-success" />
-        </div>
+        <span />
         <NodeIcon status="ok" />
-        {/* Row 2 — labels share columns with the icons so they sit exactly under them */}
+      </div>
+
+      {/* Row 2 — labels in the same column template so they sit under icons */}
+      <div className="mt-3 grid grid-cols-[40px_1fr_40px_1fr_40px] gap-x-4">
         <NodeLabel>Anthropic</NodeLabel>
         <span />
         <NodeLabel middle>Relay</NodeLabel>
@@ -193,12 +209,12 @@ function NodeIcon({
       ? "bg-success shadow-[0_0_10px_rgba(52,211,153,0.8)]"
       : "bg-danger shadow-[0_0_10px_rgba(251,113,133,0.8)]";
   return (
-    <div className="flex justify-center">
+    <div className="relative z-10 flex justify-center">
       <div
         className={`flex h-10 w-10 items-center justify-center rounded-xl border ${
           middle
-            ? "border-accent/60 bg-accent/15 shadow-[0_0_16px_-4px_rgba(167,139,250,0.4)]"
-            : "border-border-strong bg-white/[0.06]"
+            ? "border-accent/60 bg-bg-soft shadow-[0_0_24px_-4px_rgba(167,139,250,0.7)]"
+            : "border-border-strong bg-bg-soft"
         }`}
       >
         <span className={`h-2 w-2 rounded-full ${dot}`} />
@@ -216,38 +232,46 @@ function NodeLabel({
 }) {
   return (
     <span
-      className={`mt-2.5 block text-center text-[10px] uppercase tracking-[0.18em] ${middle ? "text-fg" : "text-muted"}`}
+      className={`block whitespace-nowrap text-center text-[10px] uppercase tracking-[0.18em] ${middle ? "text-fg" : "text-muted"}`}
     >
       {children}
     </span>
   );
 }
 
+const dashboardContainer: Variants = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.04 } },
+};
+const dashboardBar: Variants = {
+  hidden: { scaleY: 0, opacity: 0.4 },
+  visible: {
+    scaleY: 1,
+    opacity: 1,
+    transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] },
+  },
+};
+
 function DashboardViz() {
   const bars = [40, 65, 30, 78, 52, 88, 45, 70, 58, 92, 68, 80];
   return (
     <div className="relative h-32 w-full overflow-hidden rounded-2xl border border-border bg-bg/60 p-4">
-      <div className="flex h-full items-end gap-1.5">
+      <motion.div
+        variants={dashboardContainer}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-40px" }}
+        className="flex h-full items-end gap-1.5"
+      >
         {bars.map((h, i) => (
-          <div
+          <motion.div
             key={i}
-            className="flex h-full flex-1 items-end"
-          >
-            <motion.div
-              initial={{ scaleY: 0 }}
-              whileInView={{ scaleY: 1 }}
-              viewport={{ once: true, margin: "-40px" }}
-              transition={{
-                duration: 0.7,
-                delay: i * 0.04,
-                ease: [0.22, 1, 0.36, 1],
-              }}
-              style={{ height: `${h}%`, transformOrigin: "bottom" }}
-              className="w-full rounded-t-sm bg-gradient-to-t from-accent/60 to-accent-2/60"
-            />
-          </div>
+            variants={dashboardBar}
+            style={{ height: `${h}%`, transformOrigin: "bottom" }}
+            className="flex-1 rounded-t-sm bg-gradient-to-t from-accent/70 to-accent-2/70"
+          />
         ))}
-      </div>
+      </motion.div>
       <div className="absolute right-4 top-3 rounded-full border border-border bg-bg/80 px-2 py-0.5 font-mono text-[10px] text-muted backdrop-blur">
         p95 · 412ms
       </div>
