@@ -5,11 +5,11 @@ import { motion, AnimatePresence } from "motion/react";
 import { cn } from "../lib/cn";
 
 const links = [
-  { href: "#problem", label: "Problem" },
-  { href: "#features", label: "Features" },
-  { href: "#how", label: "How it works" },
-  { href: "#pricing", label: "Pricing" },
-  { href: "#faq", label: "FAQ" },
+  { href: "/#problem", label: "Problem" },
+  { href: "/#features", label: "Features" },
+  { href: "/#how", label: "How it works" },
+  { href: "/#pricing", label: "Pricing" },
+  { href: "/#faq", label: "FAQ" },
 ];
 
 export function Nav() {
@@ -38,7 +38,7 @@ export function Nav() {
           )}
         >
           <a
-            href="#"
+            href="/"
             className="flex items-center gap-2 rounded-full px-3 py-1.5 text-fg"
           >
             <Logo />
@@ -59,13 +59,13 @@ export function Nav() {
           </ul>
           <div className="ml-2 flex items-center gap-2">
             <a
-              href="#waitlist"
+              href="/#waitlist"
               className="hidden rounded-full px-4 py-1.5 text-sm text-muted transition-colors hover:text-fg sm:inline-flex"
             >
               Sign in
             </a>
             <a
-              href="#waitlist"
+              href="/#waitlist"
               className="group relative inline-flex items-center gap-1 rounded-full bg-fg px-4 py-1.5 text-sm font-medium text-bg transition-all hover:bg-fg/90"
             >
               Join waitlist

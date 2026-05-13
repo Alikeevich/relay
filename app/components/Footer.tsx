@@ -26,10 +26,11 @@ export function Footer() {
         <FooterColumn
           title="Product"
           links={[
-            ["Features", "#features"],
-            ["Pricing", "#pricing"],
-            ["How it works", "#how"],
-            ["FAQ", "#faq"],
+            ["Features", "/#features"],
+            ["Pricing", "/#pricing"],
+            ["How it works", "/#how"],
+            ["FAQ", "/#faq"],
+            ["Join waitlist", "/#waitlist"],
           ]}
         />
         <FooterColumn
@@ -42,12 +43,11 @@ export function Footer() {
           ]}
         />
         <FooterColumn
-          title="Company"
+          title="Legal"
           links={[
-            ["About", "#"],
-            ["Contact", "#"],
-            ["Privacy", "#"],
-            ["Terms", "#"],
+            ["Privacy", "/privacy"],
+            ["Terms", "/terms"],
+            ["Contact", "mailto:hello@relay.dev"],
           ]}
         />
       </div>
