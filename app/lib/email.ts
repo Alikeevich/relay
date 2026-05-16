@@ -19,7 +19,9 @@ interface SendWelcomeArgs {
 }
 
 const FROM_DEFAULT = "Relay <onboarding@resend.dev>";
-const REPLY_TO_DEFAULT = "alikhan@example.com"; // overridden by env
+// Looks like a real email — used to decide if a reply-to value is safe to send.
+// `example.com` and friends will get rejected by Resend, so we drop them.
+const PLACEHOLDER_DOMAINS = /@(example\.com|example\.org|example\.net|test\.com)$/i;
 
 export async function sendWelcomeEmail({
   to,
@@ -35,7 +37,13 @@ export async function sendWelcomeEmail({
   }
 
   const from = process.env.RESEND_FROM_EMAIL ?? FROM_DEFAULT;
-  const replyTo = process.env.RESEND_REPLY_TO ?? REPLY_TO_DEFAULT;
+  const replyToRaw = process.env.RESEND_REPLY_TO?.trim();
+  const replyTo =
+    replyToRaw && !PLACEHOLDER_DOMAINS.test(replyToRaw) ? replyToRaw : undefined;
+
+  console.log(
+    `[email] sending welcome → to=${to} from=${from} replyTo=${replyTo ?? "(none)"} pos=#${position}`,
+  );
 
   const resend = new Resend(apiKey);
   const html = renderHtml({ position, siteUrl });
@@ -45,7 +53,7 @@ export async function sendWelcomeEmail({
     const { data, error } = await resend.emails.send({
       from,
       to,
-      replyTo,
+      ...(replyTo ? { replyTo } : {}),
       subject: "You're on the Relay waitlist",
       html,
       text,
@@ -59,12 +67,13 @@ export async function sendWelcomeEmail({
     });
 
     if (error) {
-      console.error("[email] resend send failed", error);
+      console.error("[email] resend.emails.send returned error:", JSON.stringify(error));
       return { ok: false, error: error.message };
     }
+    console.log(`[email] sent ok id=${data?.id}`);
     return { ok: true, id: data?.id };
   } catch (err) {
-    console.error("[email] threw", err);
+    console.error("[email] threw:", err);
     return { ok: false, error: (err as Error).message };
   }
 }
