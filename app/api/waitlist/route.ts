@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
+import { sendWelcomeEmail } from "../../lib/email";
 
 /**
  * Waitlist sign-up endpoint.
@@ -150,8 +151,23 @@ export async function POST(req: Request) {
     }
   }
 
+  // Welcome email — fire-and-forget, never block the response on email
+  // delivery. Errors are logged inside `sendWelcomeEmail`.
+  const siteUrl = computeSiteUrl(req);
+  void sendWelcomeEmail({ to: email, position, siteUrl });
+
   return NextResponse.json({
     ok: true,
     position,
   });
+}
+
+function computeSiteUrl(req: Request): string {
+  if (process.env.NEXT_PUBLIC_SITE_URL) return process.env.NEXT_PUBLIC_SITE_URL;
+  const host = req.headers.get("host");
+  if (host) {
+    const proto = req.headers.get("x-forwarded-proto") ?? "https";
+    return `${proto}://${host}`;
+  }
+  return "https://relay-sdk.vercel.app";
 }
