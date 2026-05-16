@@ -20,16 +20,36 @@ const instrumentSerif = Instrument_Serif({
   style: ["normal", "italic"],
 });
 
+const BASE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "https://relay-sdk.vercel.app");
+
 export const metadata: Metadata = {
   title: "Relay — Reliable LLM API Delivery",
   description:
     "One line of code. Auto retry, failover and caching across LLM providers. Your AI agents stay online even when Anthropic and OpenAI don't.",
-  metadataBase: new URL("https://relay.dev"),
+  metadataBase: new URL(BASE_URL),
   openGraph: {
     title: "Relay — Reliable LLM API Delivery",
     description:
       "Resend for AI agents. Drop-in SDK that keeps your LLM calls flowing across providers.",
     type: "website",
+    images: [
+      {
+        url: "/api/og/logo",
+        width: 1200,
+        height: 630,
+        alt: "Relay — Reliable LLM API Delivery",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Relay — Reliable LLM API Delivery",
+    description:
+      "Drop-in SDK with auto retry, failover and caching. Your AI agents stay up even when providers don't.",
+    images: ["/api/og/logo"],
+    creator: "@AlikhanKenzh",
   },
 };
 
