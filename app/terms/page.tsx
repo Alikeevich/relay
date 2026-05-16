@@ -263,9 +263,9 @@ export default function TermsPage() {
         <p>
           These Terms are governed by the laws of the Republic of Kazakhstan,
           without regard to its conflict-of-laws rules. Disputes that cannot
-          be resolved informally will be submitted to the courts of Astana,
-          unless mandatory consumer-protection law in your country of
-          residence gives you the right to sue locally.
+          be resolved informally will be submitted to the competent courts of
+          the Republic of Kazakhstan, unless mandatory consumer-protection
+          law in your country of residence gives you the right to sue locally.
         </p>
       </Section>
 

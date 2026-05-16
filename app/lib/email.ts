@@ -109,7 +109,7 @@ function renderText({ position, siteUrl }: RenderArgs): string {
     `Every reply gets six months of Pro free at launch.`,
     ``,
     `— Alikhan, founder`,
-    `   Building Relay from Astana 🇰🇿`,
+    `   Building Relay from Pavlodar 🇰🇿`,
     `   ${siteUrl}`,
     ``,
     `─────`,
@@ -215,7 +215,7 @@ function renderHtml({ position, siteUrl }: RenderArgs): string {
             <td style="padding:0 36px 32px 36px;">
               <p style="margin:0;font-size:15px;color:#3f3f46;line-height:1.6;">
                 Talk soon,<br>
-                <strong style="color:#0f0f10;">Alikhan</strong> · building Relay from Astana 🇰🇿<br>
+                <strong style="color:#0f0f10;">Alikhan</strong> · building Relay from Pavlodar 🇰🇿<br>
                 <a href="https://x.com/AlikhanKenzh" style="color:#525252;text-decoration:underline;">@AlikhanKenzh</a>
               </p>
             </td>

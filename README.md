@@ -45,4 +45,4 @@ npm start
 
 ---
 
-Built from Astana.
+Built in Kazakhstan.

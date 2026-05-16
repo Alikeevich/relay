@@ -53,7 +53,7 @@ export function Footer() {
       </div>
       <div className="border-t border-border">
         <div className="mx-auto flex max-w-7xl flex-col items-start justify-between gap-4 px-6 py-6 text-xs text-muted sm:flex-row sm:items-center">
-          <div>© {new Date().getFullYear()} Relay. Built from Astana.</div>
+          <div>© {new Date().getFullYear()} Relay. Built in Kazakhstan.</div>
           <div>Made on Cloudflare · Next.js · Supabase</div>
         </div>
       </div>
