@@ -12,6 +12,7 @@ import { Badge } from "../ui/Badge";
 import { RevealWords } from "../ui/Reveal";
 import { GradientButton } from "../ui/GradientButton";
 import { CodeBlock } from "../ui/CodeBlock";
+import { NpmCopy } from "../ui/NpmCopy";
 
 const heroLines = [
   [
@@ -145,8 +146,17 @@ export function Hero() {
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.55 }}
+            className="mt-8"
+          >
+            <NpmCopy />
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.65 }}
-            className="mt-9 flex flex-wrap items-center gap-3"
+            className="mt-6 flex flex-wrap items-center gap-3"
           >
             <GradientButton href="#waitlist">
               Join waitlist
