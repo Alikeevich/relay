@@ -59,16 +59,16 @@ export function Nav() {
           </ul>
           <div className="ml-2 flex items-center gap-2">
             <a
-              href="/#waitlist"
+              href="/#pricing"
               className="hidden rounded-full px-4 py-1.5 text-sm text-muted transition-colors hover:text-fg sm:inline-flex"
             >
-              Sign in
+              Pricing
             </a>
             <a
-              href="/#waitlist"
+              href="/signup"
               className="group relative inline-flex items-center gap-1 rounded-full bg-fg px-4 py-1.5 text-sm font-medium text-bg transition-all hover:bg-fg/90"
             >
-              Join waitlist
+              Get API key
               <svg
                 width="14"
                 height="14"
