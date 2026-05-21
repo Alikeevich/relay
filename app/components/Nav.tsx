@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
 import { cn } from "../lib/cn";
 
 const links = [
@@ -12,6 +11,11 @@ const links = [
   { href: "/#faq", label: "FAQ" },
 ];
 
+/**
+ * Editorial nav — a single horizontal bar with hairline rule. Replaces the
+ * floating glass pill (a recognizable v0-template signature) with a flush
+ * header that reads like the masthead of a tech publication.
+ */
 export function Nav() {
   const [scrolled, setScrolled] = useState(false);
 
@@ -23,88 +27,61 @@ export function Nav() {
   }, []);
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 flex justify-center px-4 pt-4">
-      <AnimatePresence mode="wait">
-        <motion.nav
-          key={scrolled ? "scrolled" : "top"}
-          initial={{ opacity: 0, y: -8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-          className={cn(
-            "flex items-center gap-1 rounded-full border px-2 py-2 transition-all",
-            scrolled
-              ? "border-border bg-bg/70 backdrop-blur-xl shadow-[0_8px_32px_-12px_rgba(0,0,0,0.6)]"
-              : "border-transparent bg-transparent"
-          )}
+    <header
+      className={cn(
+        "fixed inset-x-0 top-0 z-50 transition-colors duration-300",
+        scrolled
+          ? "border-b border-border bg-bg/85 backdrop-blur-md"
+          : "border-b border-transparent bg-transparent",
+      )}
+    >
+      <nav className="mx-auto flex max-w-[1280px] items-center gap-8 px-6 py-4 lg:px-10">
+        <a
+          href="/"
+          className="flex items-baseline gap-2 text-fg transition-opacity hover:opacity-80"
         >
-          <a
-            href="/"
-            className="flex items-center gap-2 rounded-full px-3 py-1.5 text-fg"
-          >
-            <Logo />
-            <span className="font-medium tracking-tight">Relay</span>
-          </a>
-          <div className="mx-2 hidden h-5 w-px bg-border md:block" />
-          <ul className="hidden items-center gap-1 md:flex">
-            {links.map((l) => (
-              <li key={l.href}>
-                <a
-                  href={l.href}
-                  className="rounded-full px-3 py-1.5 text-sm text-muted transition-colors hover:bg-white/5 hover:text-fg"
-                >
-                  {l.label}
-                </a>
-              </li>
-            ))}
-          </ul>
-          <div className="ml-2 flex items-center gap-2">
-            <a
-              href="/#pricing"
-              className="hidden rounded-full px-4 py-1.5 text-sm text-muted transition-colors hover:text-fg sm:inline-flex"
-            >
-              Pricing
-            </a>
-            <a
-              href="/signup"
-              className="group relative inline-flex items-center gap-1 rounded-full bg-fg px-4 py-1.5 text-sm font-medium text-bg transition-all hover:bg-fg/90"
-            >
-              Get API key
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 14 14"
-                fill="none"
-                className="transition-transform group-hover:translate-x-0.5"
+          <Mark />
+          <span className="text-[17px] font-medium tracking-[-0.01em]">Relay</span>
+        </a>
+
+        <ul className="hidden flex-1 items-center gap-7 md:flex">
+          {links.map((l) => (
+            <li key={l.href}>
+              <a
+                href={l.href}
+                className="text-[14px] text-muted underline-offset-4 transition-colors hover:text-fg hover:underline"
               >
-                <path
-                  d="M5 3l4 4-4 4"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </a>
-          </div>
-        </motion.nav>
-      </AnimatePresence>
+                {l.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+
+        <div className="ml-auto flex items-center gap-6 md:ml-0">
+          <a
+            href="https://github.com/relay-llm/sdk"
+            className="hidden text-[14px] text-muted underline-offset-4 transition-colors hover:text-fg hover:underline sm:inline-flex"
+          >
+            Docs
+          </a>
+          <a
+            href="/signup"
+            className="inline-flex items-baseline gap-2 border-b border-fg pb-0.5 text-[14px] font-medium text-fg transition-colors hover:border-accent hover:text-accent"
+          >
+            Get an API key
+            <span aria-hidden>→</span>
+          </a>
+        </div>
+      </nav>
     </header>
   );
 }
 
-function Logo() {
+function Mark() {
+  // Smaller, single-colour stroke version of the R monogram. No gradient.
   return (
-    <svg width="22" height="22" viewBox="0 0 32 32" fill="none">
-      <defs>
-        <linearGradient id="g1" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#a78bfa" />
-          <stop offset="1" stopColor="#22d3ee" />
-        </linearGradient>
-      </defs>
-      <path
-        d="M6 9c0-1.66 1.34-3 3-3h11a6 6 0 0 1 0 12h-3l5 8h-5l-5-8H10v8H6V9Zm4 5h9a2 2 0 0 0 0-4h-9v4Z"
-        fill="url(#g1)"
-      />
+    <svg width="18" height="18" viewBox="0 0 32 32" fill="currentColor" aria-hidden>
+      <path d="M6 9c0-1.66 1.34-3 3-3h11a6 6 0 0 1 0 12h-3l5 8h-5l-5-8H10v8H6V9Zm4 5h9a2 2 0 0 0 0-4h-9v4Z" />
     </svg>
   );
 }

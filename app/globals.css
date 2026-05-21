@@ -1,21 +1,22 @@
 @import "tailwindcss";
 
 @theme {
-  --color-bg: #050505;
-  --color-bg-soft: #0a0a0c;
-  --color-fg: #f5f5f7;
-  --color-muted: #71717a;
-  --color-border: rgba(255, 255, 255, 0.08);
-  --color-border-strong: rgba(255, 255, 255, 0.14);
+  --color-bg: #0b0a0d;
+  --color-bg-soft: #131218;
+  --color-fg: #ededee;
+  --color-fg-dim: #c3c3c8;
+  --color-muted: #828289;
+  --color-border: rgba(255, 255, 255, 0.06);
+  --color-border-strong: rgba(255, 255, 255, 0.12);
   --color-accent: #a78bfa;
   --color-accent-2: #22d3ee;
-  --color-accent-3: #f472b6;
   --color-success: #34d399;
   --color-danger: #fb7185;
 
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-  --font-display: var(--font-instrument-serif);
+  /* Font CSS variables — bound to next/font output in layout.tsx */
+  --font-sans: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-mono), ui-monospace, monospace;
+  --font-display: var(--font-display), Georgia, serif;
 }
 
 @layer base {
@@ -27,12 +28,13 @@
   body {
     background: var(--color-bg);
     color: var(--color-fg);
-    font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+    font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
+    font-feature-settings: "ss01" on, "cv11" on;
   }
   ::selection {
-    background: rgba(167, 139, 250, 0.3);
+    background: rgba(167, 139, 250, 0.28);
     color: #fff;
   }
   ::-webkit-scrollbar {
@@ -42,21 +44,22 @@
     background: transparent;
   }
   ::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.06);
     border-radius: 999px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.16);
+    background: rgba(255, 255, 255, 0.14);
   }
 }
 
 @layer utilities {
   .font-display {
-    font-family: var(--font-instrument-serif), Georgia, serif;
+    font-family: var(--font-display);
     font-feature-settings: "ss01", "ss02";
+    letter-spacing: -0.005em;
   }
   .font-mono {
-    font-family: var(--font-geist-mono), ui-monospace, monospace;
+    font-family: var(--font-mono);
   }
   .text-balance {
     text-wrap: balance;
@@ -64,145 +67,53 @@
   .text-pretty {
     text-wrap: pretty;
   }
-
-  /* Subtle dotted grid background */
-  .bg-grid {
-    background-image: radial-gradient(
-      rgba(255, 255, 255, 0.08) 1px,
-      transparent 1px
-    );
-    background-size: 28px 28px;
-  }
-  .bg-grid-fade {
-    -webkit-mask-image: radial-gradient(
-      ellipse at center,
-      black 0%,
-      black 40%,
-      transparent 80%
-    );
-    mask-image: radial-gradient(
-      ellipse at center,
-      black 0%,
-      black 40%,
-      transparent 80%
-    );
+  .heading-tight {
+    letter-spacing: -0.035em;
+    line-height: 0.98;
   }
 
-  /* Aurora blobs */
-  .aurora {
-    background:
-      radial-gradient(60% 60% at 20% 30%, rgba(167, 139, 250, 0.35) 0%, transparent 60%),
-      radial-gradient(50% 50% at 80% 20%, rgba(34, 211, 238, 0.28) 0%, transparent 60%),
-      radial-gradient(60% 60% at 60% 80%, rgba(244, 114, 182, 0.22) 0%, transparent 60%);
-    filter: blur(40px);
-    animation: aurora-drift 22s ease-in-out infinite alternate;
+  /* Single subtle accent — used sparingly, never as background haze. */
+  .text-accent-em {
+    background: linear-gradient(110deg, #c9b7ff 0%, #6df0ff 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
 
-  @keyframes aurora-drift {
-    0% {
-      transform: translate3d(0, 0, 0) scale(1);
-    }
-    50% {
-      transform: translate3d(-3%, 2%, 0) scale(1.05);
-    }
-    100% {
-      transform: translate3d(2%, -3%, 0) scale(0.98);
-    }
+  /* Hairline rule used between editorial sections. */
+  .hairline {
+    border-color: var(--color-border);
   }
 
-  /* Conic shimmer for buttons / borders */
-  @keyframes spin-slow {
-    to {
-      transform: rotate(360deg);
-    }
-  }
-  .animate-spin-slow {
-    animation: spin-slow 6s linear infinite;
-  }
-
+  /* Marquee — retained, used for provider strip. */
   @keyframes marquee {
-    0% {
-      transform: translateX(0);
-    }
-    100% {
-      transform: translateX(-50%);
-    }
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
   }
   .animate-marquee {
     animation: marquee 35s linear infinite;
   }
 
-  @keyframes pulse-dot {
-    0%, 100% {
-      opacity: 1;
-      transform: scale(1);
-    }
-    50% {
-      opacity: 0.6;
-      transform: scale(1.4);
-    }
-  }
-  .animate-pulse-dot {
-    animation: pulse-dot 2s ease-in-out infinite;
-  }
-
-  @keyframes shimmer {
-    100% {
-      transform: translateX(100%);
-    }
-  }
-
-  @keyframes float {
-    0%, 100% {
-      transform: translateY(0);
-    }
-    50% {
-      transform: translateY(-8px);
-    }
-  }
-
-  /* Gradient text */
-  .text-gradient {
-    background: linear-gradient(135deg, #f5f5f7 0%, #a78bfa 50%, #22d3ee 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-
-  .text-gradient-accent {
-    background: linear-gradient(135deg, #a78bfa 0%, #22d3ee 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-
-  /* Glassmorphism */
-  .glass {
-    background: rgba(255, 255, 255, 0.025);
-    border: 1px solid var(--color-border);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-  }
-
-  /* Glow ring */
-  .glow-ring::before {
+  /* Subtle film-grain noise — adds tactile feel without "AI glow". */
+  .noise::after {
     content: "";
     position: absolute;
-    inset: -1px;
-    border-radius: inherit;
-    padding: 1px;
-    background: conic-gradient(
-      from 180deg at 50% 50%,
-      rgba(167, 139, 250, 0) 0deg,
-      rgba(167, 139, 250, 0.8) 90deg,
-      rgba(34, 211, 238, 0.8) 180deg,
-      rgba(167, 139, 250, 0) 270deg
-    );
-    -webkit-mask:
-      linear-gradient(#fff 0 0) content-box,
-      linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
+    inset: 0;
     pointer-events: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence baseFrequency='0.9' numOctaves='2' seed='4'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.42 0'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.5'/></svg>");
+    opacity: 0.06;
+    mix-blend-mode: overlay;
+  }
+
+  /* Cursor caret used inside the live log demo. */
+  @keyframes caret {
+    0%, 49% { opacity: 1; }
+    50%, 100% { opacity: 0; }
+  }
+  .caret::after {
+    content: "▍";
+    margin-left: 2px;
+    animation: caret 1.05s steps(1) infinite;
+    color: rgba(255, 255, 255, 0.5);
   }
 }

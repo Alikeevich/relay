@@ -1,16 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { IconCheck, IconCopy } from "@tabler/icons-react";
 
 const COMMAND = "npm install @relay-api/sdk";
 
 /**
  * Inline copy-to-clipboard pill that shows the SDK install command.
  *
- * Sits below the hero headline so anyone landing immediately sees how to
- * adopt Relay — one line, copy with a click. The visual style is meant to
- * read as a terminal prompt without feeling decorative.
+ * Plain text affordances ("copy" / "copied") instead of icons — keeps the
+ * hero deliberately icon-free to read as a hand-crafted dev site rather
+ * than an AI template.
  */
 export function NpmCopy() {
   const [copied, setCopied] = useState(false);
@@ -27,18 +26,16 @@ export function NpmCopy() {
       type="button"
       onClick={copy}
       aria-label="Copy install command"
-      className="group inline-flex items-center gap-3 rounded-full border border-border bg-white/[0.03] px-4 py-2 font-mono text-sm text-fg/85 backdrop-blur transition-all hover:border-border-strong hover:bg-white/[0.05]"
+      className="group inline-flex items-center gap-3 border border-border bg-transparent px-4 py-2.5 font-mono text-[13px] text-fg/85 transition-colors hover:border-border-strong"
     >
-      <span className="select-none text-muted">$</span>
+      <span aria-hidden className="select-none text-muted">$</span>
       <span className="select-all">{COMMAND}</span>
       <span
-        className={`flex h-6 w-6 items-center justify-center rounded-full transition-colors ${
-          copied
-            ? "bg-success/15 text-success"
-            : "bg-white/[0.04] text-muted group-hover:bg-white/[0.08] group-hover:text-fg"
+        className={`min-w-[58px] text-right font-mono text-[11px] uppercase tracking-[0.16em] transition-colors ${
+          copied ? "text-[#7ee7b0]" : "text-muted group-hover:text-fg"
         }`}
       >
-        {copied ? <IconCheck size={13} stroke={3} /> : <IconCopy size={13} />}
+        {copied ? "copied" : "copy"}
       </span>
     </button>
   );

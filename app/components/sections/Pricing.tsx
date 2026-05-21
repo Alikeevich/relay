@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { motion } from "motion/react";
-import { IconCheck, IconSparkles } from "@tabler/icons-react";
 import { Reveal } from "../ui/Reveal";
 import { cn } from "../../lib/cn";
 
@@ -75,52 +74,51 @@ const plans: Plan[] = [
 export function Pricing() {
   const [annual, setAnnual] = useState(false);
   return (
-    <section id="pricing" className="relative bg-bg py-32">
-      <div className="mx-auto max-w-6xl px-6">
-        <Reveal>
-          <div className="text-xs uppercase tracking-[0.2em] text-muted">
-            Pricing
+    <section id="pricing" className="relative border-b border-border py-32">
+      <div className="mx-auto max-w-[1280px] px-6 lg:px-10">
+        <div className="grid grid-cols-1 items-end gap-x-16 gap-y-10 lg:grid-cols-[1fr_auto]">
+          <div>
+            <Reveal>
+              <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted">
+                — Pricing
+              </p>
+            </Reveal>
+            <Reveal delay={0.08}>
+              <h2 className="heading-tight mt-5 max-w-3xl text-balance text-[clamp(2rem,4.5vw,3.5rem)] font-medium text-fg">
+                Free until you ship.{" "}
+                <em className="font-display italic text-fg-dim">Then small.</em>
+              </h2>
+            </Reveal>
           </div>
-        </Reveal>
-        <Reveal delay={0.08}>
-          <h2 className="mt-4 max-w-3xl text-balance text-[clamp(2rem,5vw,3.5rem)] font-medium leading-[1.05] tracking-[-0.02em] text-fg">
-            Free until you ship.{" "}
-            <span className="font-display italic text-gradient-accent">
-              Then small.
-            </span>
-          </h2>
-        </Reveal>
 
-        <div className="mt-10 flex items-center gap-3">
-          <span className={cn("text-sm", !annual ? "text-fg" : "text-muted")}>
-            Monthly
-          </span>
-          <button
-            type="button"
-            aria-label="Toggle annual billing"
-            onClick={() => setAnnual((v) => !v)}
-            className="relative h-6 w-11 rounded-full border border-border bg-white/[0.04] transition-colors"
-          >
-            <motion.span
-              layout
-              transition={{ type: "spring", stiffness: 500, damping: 30 }}
+          {/* Billing toggle */}
+          <div className="flex items-center gap-3 font-mono text-[12px] uppercase tracking-[0.16em]">
+            <button
+              type="button"
+              onClick={() => setAnnual(false)}
               className={cn(
-                "absolute top-[2px] h-[18px] w-[18px] rounded-full bg-gradient-to-br from-accent to-accent-2 shadow-[0_0_12px_rgba(167,139,250,0.5)]",
-                annual ? "right-[2px]" : "left-[2px]"
+                "border-b pb-1 transition-colors",
+                !annual ? "border-fg text-fg" : "border-transparent text-muted hover:text-fg",
               )}
-            />
-          </button>
-          <span className={cn("text-sm", annual ? "text-fg" : "text-muted")}>
-            Annual
-            <span className="ml-2 inline-flex rounded-full border border-success/30 bg-success/10 px-2 py-0.5 text-[10px] font-medium text-success">
-              -20%
-            </span>
-          </span>
+            >
+              monthly
+            </button>
+            <button
+              type="button"
+              onClick={() => setAnnual(true)}
+              className={cn(
+                "border-b pb-1 transition-colors",
+                annual ? "border-fg text-fg" : "border-transparent text-muted hover:text-fg",
+              )}
+            >
+              annual&nbsp;<span className="text-[#7ee7b0]">−20%</span>
+            </button>
+          </div>
         </div>
 
-        <div className="mt-12 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
+        <div className="mt-14 grid grid-cols-1 divide-y divide-border border-y border-border md:grid-cols-2 md:divide-x md:divide-y-0 xl:grid-cols-4">
           {plans.map((p, i) => (
-            <PlanCard key={p.name} plan={p} annual={annual} delay={i * 0.05} />
+            <PlanColumn key={p.name} plan={p} annual={annual} delay={i * 0.05} />
           ))}
         </div>
       </div>
@@ -128,7 +126,7 @@ export function Pricing() {
   );
 }
 
-function PlanCard({
+function PlanColumn({
   plan,
   annual,
   delay,
@@ -144,64 +142,43 @@ function PlanCard({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-60px" }}
       transition={{ duration: 0.7, delay, ease: [0.22, 1, 0.36, 1] }}
-      className={cn(
-        "relative flex flex-col overflow-hidden rounded-3xl border p-7 transition-colors",
-        plan.highlight
-          ? "border-transparent bg-bg-soft"
-          : "border-border bg-bg-soft hover:border-border-strong"
-      )}
+      className="relative flex flex-col p-8"
     >
       {plan.highlight && (
-        <>
-          <div
-            aria-hidden
-            className="pointer-events-none absolute -inset-px rounded-3xl bg-gradient-to-br from-accent via-accent-3 to-accent-2 opacity-60"
-            style={{
-              WebkitMask:
-                "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
-              WebkitMaskComposite: "xor",
-              maskComposite: "exclude",
-              padding: 1,
-            }}
-          />
-          <span className="absolute right-5 top-5 inline-flex items-center gap-1 rounded-full bg-fg px-2.5 py-1 text-[10px] font-medium uppercase tracking-wider text-bg">
-            <IconSparkles size={11} />
-            Popular
-          </span>
-        </>
+        <span className="absolute right-8 top-8 font-mono text-[10px] uppercase tracking-[0.22em] text-accent">
+          most chosen
+        </span>
       )}
-      <div>
-        <div className="text-sm font-medium uppercase tracking-wider text-muted">
-          {plan.name}
-        </div>
-        <p className="mt-2 text-sm text-muted">{plan.tagline}</p>
-      </div>
-      <div className="mt-7 flex items-baseline gap-1.5">
-        <span className="font-display text-5xl text-fg">${price}</span>
-        <span className="text-sm text-muted">/ month</span>
+      <div className="text-[15px] font-medium text-fg">{plan.name}</div>
+      <p className="mt-2 text-[13px] leading-relaxed text-muted">{plan.tagline}</p>
+
+      <div className="mt-8 flex items-baseline gap-2">
+        <span className="font-display text-[44px] font-medium leading-none text-fg">
+          ${price}
+        </span>
+        <span className="text-[13px] text-muted">/ month</span>
       </div>
 
-      <ul className="mt-7 space-y-3 text-sm">
+      <ul className="mt-7 space-y-3 text-[14px] text-fg-dim">
         {plan.features.map((f) => (
-          <li key={f} className="flex items-start gap-2.5 text-fg/90">
-            <span className="mt-0.5 inline-flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-success/15 text-success">
-              <IconCheck size={11} stroke={3} />
-            </span>
-            {f}
+          <li key={f} className="flex items-baseline gap-3">
+            <span className="select-none font-mono text-[11px] text-muted">·</span>
+            <span>{f}</span>
           </li>
         ))}
       </ul>
 
       <a
-        href="#waitlist"
+        href="/signup"
         className={cn(
-          "mt-8 inline-flex items-center justify-center rounded-full px-4 py-2.5 text-sm font-medium transition-all",
+          "mt-10 inline-flex items-baseline gap-2 border-b pb-1 text-[14px] font-medium underline-offset-4",
           plan.highlight
-            ? "bg-fg text-bg hover:bg-fg/90"
-            : "border border-border bg-white/[0.02] text-fg hover:border-border-strong hover:bg-white/[0.05]"
+            ? "border-fg text-fg hover:border-accent hover:text-accent"
+            : "border-border text-muted hover:border-fg hover:text-fg",
         )}
       >
         {plan.cta}
+        <span aria-hidden>→</span>
       </a>
     </motion.div>
   );

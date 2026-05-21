@@ -2,88 +2,61 @@ import type { Metadata } from "next";
 import { Nav } from "../components/Nav";
 import { Footer } from "../components/Footer";
 import { SignupForm } from "./SignupForm";
-import { Aurora } from "../components/ui/Aurora";
 
 export const metadata: Metadata = {
-  title: "Get your Relay API key",
+  title: "Get a Relay API key",
   description:
-    "Self-serve signup for Relay. Paste your provider key, get a Relay key in 10 seconds. BYOK, encrypted at rest, open-source SDK.",
+    "Paste a provider key. Get a Relay key back. BYOK, encrypted at rest, open-source SDK.",
 };
 
 export default function SignupPage() {
   return (
     <>
       <Nav />
-      <main className="relative isolate min-h-screen overflow-hidden pt-32 pb-24">
-        <Aurora />
-
-        <div className="relative mx-auto grid max-w-6xl grid-cols-1 gap-12 px-6 lg:grid-cols-[1fr_1.05fr] lg:gap-20">
-          {/* Left — trust pitch */}
-          <div className="lg:pt-10">
-            <div className="text-xs uppercase tracking-[0.2em] text-muted">
-              Get started
-            </div>
-            <h1 className="mt-4 text-balance text-[clamp(2.25rem,5vw,3.5rem)] font-medium leading-[1.05] tracking-[-0.02em] text-fg">
-              Your{" "}
-              <span className="font-display italic text-gradient-accent">
-                Relay key
-              </span>{" "}
-              in 10 seconds.
+      <main className="relative min-h-screen border-b border-border pt-32 pb-24">
+        <div className="mx-auto grid max-w-[1280px] grid-cols-1 gap-x-16 gap-y-14 px-6 lg:grid-cols-[1fr_1.05fr] lg:px-10">
+          {/* Left — editorial pitch */}
+          <div className="lg:pt-6">
+            <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted">
+              — Get started
+            </p>
+            <h1 className="heading-tight mt-5 text-balance text-[clamp(2.25rem,5vw,3.5rem)] font-medium text-fg">
+              Your <em className="font-display italic text-fg-dim">Relay key</em>{" "}
+              in ten seconds.
             </h1>
-            <p className="mt-6 max-w-md text-pretty text-lg text-muted">
-              Paste a provider key, get a Relay key back. From that moment on
-              all your LLM calls flow through retry, failover and caching —
-              with one line of code.
+            <p className="mt-6 max-w-[440px] text-pretty text-[16.5px] leading-relaxed text-fg-dim">
+              Paste a provider key on the right. Get a Relay key back. From
+              that moment your LLM calls flow through retry, failover and
+              caching — one import, your same code.
             </p>
 
-            <ul className="mt-10 space-y-5 text-sm text-muted">
-              <li className="flex gap-3">
-                <Dot />
-                <div>
-                  <div className="font-medium text-fg">
-                    BYOK — your keys, your bill.
-                  </div>
-                  We never touch your upstream provider invoices. Anthropic /
-                  OpenAI / Gemini charges land on the card you registered with
-                  them.
-                </div>
-              </li>
-              <li className="flex gap-3">
-                <Dot />
-                <div>
-                  <div className="font-medium text-fg">Encrypted at rest.</div>
-                  Your provider key is stored in Cloudflare KV with platform
-                  encryption. Only the edge worker reads it at request time;
-                  it is never written to logs.
-                </div>
-              </li>
-              <li className="flex gap-3">
-                <Dot />
-                <div>
-                  <div className="font-medium text-fg">
-                    Open-source SDK — audit before you import.
-                  </div>
-                  Every line of code your app runs lives at{" "}
-                  <a
-                    href="https://github.com/relay-llm/sdk"
-                    className="text-accent underline-offset-4 hover:underline"
-                  >
-                    github.com/relay-llm/sdk
-                  </a>
-                  . MIT licensed. Verify it never sends your provider key
-                  anywhere except our endpoint.
-                </div>
-              </li>
-              <li className="flex gap-3">
-                <Dot />
-                <div>
-                  <div className="font-medium text-fg">
-                    Revoke any time, no questions.
-                  </div>
-                  We'll wire up a one-click revoke in the dashboard. Until
-                  then, email us — we delete the keyHash from KV in seconds.
-                </div>
-              </li>
+            <ul className="mt-12 space-y-7">
+              <Reason title="BYOK — your keys, your bill.">
+                We never touch your upstream provider invoices. Anthropic,
+                OpenAI and Gemini charges land on the card you registered
+                with them.
+              </Reason>
+              <Reason title="Encrypted at rest.">
+                Your provider key is stored in Cloudflare KV with platform
+                encryption. Only the edge worker reads it at request time;
+                it is never written to logs.
+              </Reason>
+              <Reason title="Open-source SDK — audit before you import.">
+                Every line of code your app runs lives at{" "}
+                <a
+                  href="https://github.com/relay-llm/sdk"
+                  className="text-fg underline underline-offset-4 hover:text-accent"
+                >
+                  github.com/relay-llm/sdk
+                </a>
+                . MIT-licensed. Verify it never sends your provider key
+                anywhere except our endpoint.
+              </Reason>
+              <Reason title="Revoke any time.">
+                The dashboard ships one-click revoke. Until then, email me —
+                I delete the keyHash from KV in seconds, your provider keeps
+                working.
+              </Reason>
             </ul>
           </div>
 
@@ -98,11 +71,19 @@ export default function SignupPage() {
   );
 }
 
-function Dot() {
+function Reason({
+  title,
+  children,
+}: {
+  title: string;
+  children: React.ReactNode;
+}) {
   return (
-    <span
-      aria-hidden
-      className="mt-2 inline-flex h-1.5 w-1.5 shrink-0 rounded-full bg-gradient-to-br from-accent to-accent-2"
-    />
+    <li className="border-l border-border pl-5">
+      <h3 className="text-[15px] font-medium text-fg">{title}</h3>
+      <p className="mt-2 max-w-[420px] text-[14.5px] leading-relaxed text-fg-dim">
+        {children}
+      </p>
+    </li>
   );
 }

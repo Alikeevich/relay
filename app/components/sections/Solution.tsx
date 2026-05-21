@@ -1,6 +1,5 @@
 "use client";
 
-import { IconArrowRight, IconX } from "@tabler/icons-react";
 import { CodeBlock, Line } from "../ui/CodeBlock";
 import { Reveal } from "../ui/Reveal";
 
@@ -122,30 +121,29 @@ const after: Line[] = [
 
 export function Solution() {
   return (
-    <section className="relative bg-bg py-32">
-      <div className="mx-auto max-w-6xl px-6">
+    <section className="relative border-b border-border py-32">
+      <div className="mx-auto max-w-[1280px] px-6 lg:px-10">
         <Reveal>
-          <div className="text-xs uppercase tracking-[0.2em] text-muted">
-            The fix
-          </div>
+          <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted">
+            — The fix
+          </p>
         </Reveal>
         <Reveal delay={0.08}>
-          <h2 className="mt-4 max-w-3xl text-balance text-[clamp(2rem,5vw,3.5rem)] font-medium leading-[1.05] tracking-[-0.02em] text-fg">
+          <h2 className="heading-tight mt-5 max-w-3xl text-balance text-[clamp(2rem,4.5vw,3.5rem)] font-medium text-fg">
             Delete the retry file.{" "}
-            <span className="font-display italic text-gradient-accent">
-              Keep shipping.
-            </span>
+            <em className="font-display italic text-fg-dim">Keep shipping.</em>
           </h2>
         </Reveal>
         <Reveal delay={0.16}>
-          <p className="mt-6 max-w-2xl text-lg text-muted">
+          <p className="mt-6 max-w-2xl text-[17px] leading-relaxed text-fg-dim">
             Replace <span className="font-mono text-fg">@anthropic-ai/sdk</span>{" "}
-            with <span className="font-mono text-fg">@relay/sdk</span>. Same API,
-            different superpowers.
+            with <span className="font-mono text-fg">@relay-api/sdk</span>. Same
+            method signatures, same streaming. Retry, failover and caching
+            become someone else&apos;s problem.
           </p>
         </Reveal>
 
-        <div className="mt-16 grid grid-cols-1 gap-6 lg:grid-cols-[1fr_auto_1fr] lg:items-center lg:gap-8">
+        <div className="mt-16 grid grid-cols-1 gap-8 lg:grid-cols-2">
           <Reveal y={32}>
             <div className="relative">
               <Label tone="bad">Before</Label>
@@ -153,17 +151,10 @@ export function Solution() {
             </div>
           </Reveal>
 
-          <div className="hidden lg:flex lg:items-center lg:justify-center">
-            <div className="relative flex h-14 w-14 items-center justify-center rounded-full border border-border bg-bg-soft">
-              <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-accent/40 to-accent-2/40 blur-xl" />
-              <IconArrowRight size={20} className="relative text-fg" />
-            </div>
-          </div>
-
           <Reveal y={32} delay={0.15}>
             <div className="relative">
               <Label tone="good">After</Label>
-              <CodeBlock title="with-relay.ts" lines={after} glow />
+              <CodeBlock title="with-relay.ts" lines={after} />
             </div>
           </Reveal>
         </div>
@@ -179,16 +170,12 @@ function Label({
   children: React.ReactNode;
   tone: "good" | "bad";
 }) {
-  const styles =
-    tone === "good"
-      ? "border-success/30 bg-success/10 text-success"
-      : "border-danger/30 bg-danger/10 text-danger";
+  const color = tone === "good" ? "text-[#7ee7b0]" : "text-[#ff8593]";
   return (
     <span
-      className={`absolute -top-3 left-4 z-10 inline-flex items-center gap-1.5 rounded-full border bg-bg-soft px-3 py-1 text-[11px] font-medium uppercase tracking-wider ${styles}`}
+      className={`mb-3 inline-block font-mono text-[11px] uppercase tracking-[0.22em] ${color}`}
     >
-      {tone === "bad" && <IconX size={12} />}
-      {children}
+      — {children}
     </span>
   );
 }

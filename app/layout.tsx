@@ -1,23 +1,33 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Instrument_Serif } from "next/font/google";
+import { Bricolage_Grotesque, Fraunces, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { SmoothScroll } from "./components/SmoothScroll";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+// Body sans — variable, slightly editorial, deliberately NOT Geist/Inter
+// (which read as v0/Vercel template fonts in 2026).
+const bricolage = Bricolage_Grotesque({
+  variable: "--font-sans",
   subsets: ["latin"],
+  display: "swap",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+// Editorial accent — Fraunces italic on a handful of words. Replaces the
+// Instrument Serif trick that every v0-generated landing now uses.
+// Variable axes (opsz / SOFT) require omitting the weight array.
+const fraunces = Fraunces({
+  variable: "--font-display",
   subsets: ["latin"],
-});
-
-const instrumentSerif = Instrument_Serif({
-  variable: "--font-instrument-serif",
-  subsets: ["latin"],
-  weight: "400",
   style: ["normal", "italic"],
+  axes: ["opsz", "SOFT"],
+  display: "swap",
+});
+
+// Mono — JetBrains Mono is widely associated with serious developer tools
+// (JetBrains IDEs, GitHub Codespaces) rather than AI templates.
+const jbMono = JetBrains_Mono({
+  variable: "--font-mono",
+  subsets: ["latin"],
+  display: "swap",
 });
 
 const BASE_URL =
@@ -25,29 +35,29 @@ const BASE_URL =
   (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "https://relay-sdk.vercel.app");
 
 export const metadata: Metadata = {
-  title: "Relay — Reliable LLM API Delivery",
+  title: "Relay — Reliable LLM API delivery",
   description:
-    "One line of code. Auto retry, failover and caching across LLM providers. Your AI agents stay online even when Anthropic and OpenAI don't.",
+    "Auto retry, provider failover and smart caching for LLM API calls. One import keeps your agents up when Anthropic and OpenAI don't.",
   metadataBase: new URL(BASE_URL),
   openGraph: {
-    title: "Relay — Reliable LLM API Delivery",
+    title: "Relay — Reliable LLM API delivery",
     description:
-      "Resend for AI agents. Drop-in SDK that keeps your LLM calls flowing across providers.",
+      "Stop rewriting retry-and-failover. Import this instead — your AI calls survive provider outages.",
     type: "website",
     images: [
       {
         url: "/api/og/logo",
         width: 1200,
         height: 630,
-        alt: "Relay — Reliable LLM API Delivery",
+        alt: "Relay — Reliable LLM API delivery",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Relay — Reliable LLM API Delivery",
+    title: "Relay — Reliable LLM API delivery",
     description:
-      "Drop-in SDK with auto retry, failover and caching. Your AI agents stay up even when providers don't.",
+      "Stop rewriting retry-and-failover. Import this instead — your AI calls survive provider outages.",
     images: ["/api/og/logo"],
     creator: "@AlikhanKenzh",
   },
@@ -59,7 +69,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${instrumentSerif.variable}`}
+      className={`${bricolage.variable} ${fraunces.variable} ${jbMono.variable}`}
     >
       <body>
         <SmoothScroll>{children}</SmoothScroll>

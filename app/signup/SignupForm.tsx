@@ -2,14 +2,6 @@
 
 import { FormEvent, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import {
-  IconAlertCircle,
-  IconArrowRight,
-  IconCheck,
-  IconCopy,
-  IconEye,
-  IconEyeOff,
-} from "@tabler/icons-react";
 
 type Provider = "gemini" | "anthropic" | "openai";
 
@@ -18,19 +10,19 @@ const PROVIDERS: { id: Provider; label: string; placeholder: string; hint: strin
     id: "gemini",
     label: "Google Gemini",
     placeholder: "AIzaSy...",
-    hint: "Get one from aistudio.google.com/app/apikey",
+    hint: "from aistudio.google.com/app/apikey",
   },
   {
     id: "anthropic",
     label: "Anthropic Claude",
     placeholder: "sk-ant-...",
-    hint: "Get one from console.anthropic.com",
+    hint: "from console.anthropic.com",
   },
   {
     id: "openai",
     label: "OpenAI",
     placeholder: "sk-...",
-    hint: "Get one from platform.openai.com/api-keys",
+    hint: "from platform.openai.com/api-keys",
   },
 ];
 
@@ -53,7 +45,6 @@ export function SignupForm() {
     if (state.kind === "loading") return;
     const fd = new FormData(e.currentTarget);
     const company = (fd.get("company") as string) ?? "";
-
     setState({ kind: "loading" });
     try {
       const res = await fetch("/api/signup", {
@@ -93,209 +84,189 @@ export function SignupForm() {
   const selected = PROVIDERS.find((p) => p.id === provider)!;
 
   return (
-    <div className="relative">
-      <div
-        aria-hidden
-        className="pointer-events-none absolute -inset-px rounded-3xl bg-gradient-to-br from-accent/40 via-accent-2/30 to-accent-3/40 opacity-60"
-        style={{
-          WebkitMask:
-            "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
-          WebkitMaskComposite: "xor",
-          maskComposite: "exclude",
-          padding: 1,
-        }}
-      />
-      <div className="relative rounded-3xl border border-border bg-bg-soft/80 p-8 backdrop-blur">
-        <AnimatePresence mode="wait">
-          {state.kind !== "success" ? (
-            <motion.form
-              key="form"
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-              onSubmit={onSubmit}
-              noValidate
-              className="flex flex-col gap-5"
-            >
+    <div className="relative border border-border bg-bg-soft p-8 lg:p-10">
+      <AnimatePresence mode="wait">
+        {state.kind !== "success" ? (
+          <motion.form
+            key="form"
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+            onSubmit={onSubmit}
+            noValidate
+            className="flex flex-col gap-7"
+          >
+            <input
+              type="text"
+              name="company"
+              tabIndex={-1}
+              autoComplete="off"
+              aria-hidden
+              className="absolute -left-[9999px] h-0 w-0 opacity-0"
+            />
+
+            <Field label="Your email">
               <input
-                type="text"
-                name="company"
-                tabIndex={-1}
-                autoComplete="off"
-                aria-hidden
-                className="absolute -left-[9999px] h-0 w-0 opacity-0"
+                type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="you@startup.dev"
+                disabled={state.kind === "loading"}
+                className="w-full border-b border-border-strong bg-transparent px-1 py-2.5 text-[17px] text-fg placeholder:text-muted/55 focus:border-fg focus:outline-none disabled:opacity-70"
               />
+            </Field>
 
-              <Field label="Your email">
-                <input
-                  type="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="you@startup.dev"
-                  disabled={state.kind === "loading"}
-                  className="w-full rounded-xl border border-border bg-white/[0.03] px-4 py-3 text-fg backdrop-blur placeholder:text-muted/60 focus:border-border-strong focus:outline-none focus:ring-2 focus:ring-accent/30 disabled:opacity-70"
-                />
-              </Field>
-
-              <Field label="Provider">
-                <div className="grid grid-cols-3 gap-2">
-                  {PROVIDERS.map((p) => (
-                    <button
-                      type="button"
-                      key={p.id}
-                      onClick={() => setProvider(p.id)}
-                      disabled={state.kind === "loading"}
-                      className={`rounded-xl border px-3 py-2.5 text-sm transition-all ${
-                        provider === p.id
-                          ? "border-accent/50 bg-accent/10 text-fg"
-                          : "border-border bg-white/[0.02] text-muted hover:border-border-strong hover:text-fg"
-                      } disabled:opacity-50`}
-                    >
-                      {p.label}
-                    </button>
-                  ))}
-                </div>
-              </Field>
-
-              <Field label={`${selected.label} API key`} hint={selected.hint}>
-                <div className="relative">
-                  <input
-                    type={show ? "text" : "password"}
-                    required
-                    value={providerKey}
-                    onChange={(e) => setProviderKey(e.target.value)}
-                    placeholder={selected.placeholder}
-                    autoComplete="off"
-                    spellCheck={false}
-                    disabled={state.kind === "loading"}
-                    className="w-full rounded-xl border border-border bg-white/[0.03] px-4 py-3 pr-12 font-mono text-sm text-fg backdrop-blur placeholder:text-muted/60 focus:border-border-strong focus:outline-none focus:ring-2 focus:ring-accent/30 disabled:opacity-70"
-                  />
+            <Field label="Provider">
+              <div className="flex flex-wrap gap-x-6 gap-y-2 font-mono text-[12px] uppercase tracking-[0.18em]">
+                {PROVIDERS.map((p) => (
                   <button
                     type="button"
-                    onClick={() => setShow((v) => !v)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 inline-flex h-7 w-7 items-center justify-center rounded-md text-muted transition-colors hover:bg-white/[0.05] hover:text-fg"
-                    aria-label={show ? "Hide key" : "Show key"}
+                    key={p.id}
+                    onClick={() => setProvider(p.id)}
+                    disabled={state.kind === "loading"}
+                    className={`border-b pb-1 transition-colors ${
+                      provider === p.id
+                        ? "border-fg text-fg"
+                        : "border-transparent text-muted hover:text-fg"
+                    } disabled:opacity-50`}
                   >
-                    {show ? <IconEyeOff size={14} /> : <IconEye size={14} />}
+                    {p.label}
                   </button>
-                </div>
-              </Field>
+                ))}
+              </div>
+            </Field>
 
-              <p className="text-xs leading-relaxed text-muted">
-                Submitting this form sends your provider key over TLS straight
-                to the encrypted KV namespace on Cloudflare. The founder never
-                sees it — verify it yourself in the{" "}
-                <a
-                  href="https://github.com/relay-llm/sdk"
-                  className="text-accent underline-offset-4 hover:underline"
+            <Field label={`${selected.label} API key`} hint={selected.hint}>
+              <div className="relative">
+                <input
+                  type={show ? "text" : "password"}
+                  required
+                  value={providerKey}
+                  onChange={(e) => setProviderKey(e.target.value)}
+                  placeholder={selected.placeholder}
+                  autoComplete="off"
+                  spellCheck={false}
+                  disabled={state.kind === "loading"}
+                  className="w-full border-b border-border-strong bg-transparent px-1 py-2.5 pr-14 font-mono text-[15px] text-fg placeholder:text-muted/55 focus:border-fg focus:outline-none disabled:opacity-70"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShow((v) => !v)}
+                  className="absolute right-1 top-1/2 -translate-y-1/2 font-mono text-[11px] uppercase tracking-[0.18em] text-muted transition-colors hover:text-fg"
+                  aria-label={show ? "Hide key" : "Show key"}
                 >
-                  open-source SDK source
-                </a>
-                .
-              </p>
+                  {show ? "hide" : "show"}
+                </button>
+              </div>
+            </Field>
 
-              <button
-                type="submit"
-                disabled={state.kind === "loading"}
-                className="relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-full bg-fg px-6 py-3.5 text-sm font-medium text-bg transition-all hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-80"
+            <p className="max-w-[460px] text-[13px] leading-relaxed text-muted">
+              Submitting sends your provider key over TLS straight into the
+              encrypted KV namespace on Cloudflare. The founder never sees it —
+              verify it yourself in the{" "}
+              <a
+                href="https://github.com/relay-llm/sdk"
+                className="text-fg underline underline-offset-4 hover:text-accent"
               >
-                {state.kind === "loading" ? (
-                  <>
-                    <Spinner /> Provisioning…
-                  </>
-                ) : (
-                  <>
-                    Get my Relay key
-                    <IconArrowRight size={16} />
-                  </>
-                )}
-              </button>
+                open-source SDK
+              </a>
+              .
+            </p>
 
+            <div className="flex items-center justify-between gap-4 border-t border-border pt-6">
               <AnimatePresence>
-                {state.kind === "error" && (
-                  <motion.div
+                {state.kind === "error" ? (
+                  <motion.span
                     initial={{ opacity: 0, y: -4 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -4 }}
-                    className="inline-flex items-center gap-2 rounded-full border border-danger/30 bg-danger/10 px-4 py-2 text-sm text-danger"
+                    className="font-mono text-[12px] text-[#ff8593]"
                   >
-                    <IconAlertCircle size={14} />
-                    {state.message}
-                  </motion.div>
+                    ! {state.message}
+                  </motion.span>
+                ) : (
+                  <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted">
+                    no card · BYOK · revoke any time
+                  </span>
                 )}
               </AnimatePresence>
-            </motion.form>
-          ) : (
-            <motion.div
-              key="success"
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4 }}
-              className="flex flex-col gap-5"
-            >
-              <div className="inline-flex h-11 w-11 items-center justify-center self-start rounded-full border border-success/40 bg-success/10 text-success">
-                <IconCheck size={20} stroke={3} />
-              </div>
-              <div>
-                <h2 className="text-2xl font-medium text-fg">You&apos;re wired up.</h2>
-                <p className="mt-2 text-sm text-muted">
-                  This key is shown once. Save it now — we cannot recover it.
-                </p>
-              </div>
+              <button
+                type="submit"
+                disabled={state.kind === "loading"}
+                className="inline-flex items-baseline gap-2 border-b border-fg pb-1 font-mono text-[12px] uppercase tracking-[0.18em] text-fg transition-colors hover:border-accent hover:text-accent disabled:cursor-not-allowed disabled:opacity-70"
+              >
+                {state.kind === "loading" ? "provisioning…" : "get my relay key"}
+                {state.kind !== "loading" && <span aria-hidden>→</span>}
+              </button>
+            </div>
+          </motion.form>
+        ) : (
+          <motion.div
+            key="success"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+            className="flex flex-col gap-7"
+          >
+            <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-[#7ee7b0]">
+              — wired up
+            </p>
+            <div>
+              <h2 className="heading-tight text-[28px] font-medium text-fg">
+                Save this key now.
+              </h2>
+              <p className="mt-3 max-w-[460px] text-[14.5px] leading-relaxed text-fg-dim">
+                It is shown once. We store only the hash, so we can&apos;t
+                recover it later. If you lose it, generate a new one.
+              </p>
+            </div>
 
-              <div className="rounded-2xl border border-border bg-bg/50 p-1">
-                <div className="flex items-center gap-2 rounded-xl bg-bg-soft/80 px-4 py-3 font-mono text-sm">
-                  <span className="flex-1 select-all truncate text-fg">
-                    {state.apiKey}
-                  </span>
-                  <button
-                    onClick={copyKey}
-                    className="inline-flex items-center gap-1.5 rounded-full border border-border bg-white/[0.04] px-3 py-1.5 text-xs text-fg transition-colors hover:border-border-strong hover:bg-white/[0.08]"
-                  >
-                    {copied ? (
-                      <>
-                        <IconCheck size={12} stroke={3} className="text-success" />
-                        Copied
-                      </>
-                    ) : (
-                      <>
-                        <IconCopy size={12} />
-                        Copy
-                      </>
-                    )}
-                  </button>
-                </div>
-              </div>
-
-              <div className="rounded-2xl border border-border bg-white/[0.02] p-5">
-                <div className="text-xs uppercase tracking-[0.2em] text-muted">
-                  Quickstart
-                </div>
-                <pre className="mt-3 overflow-x-auto rounded-xl bg-bg/80 p-4 font-mono text-[12.5px] leading-6 text-fg/85">
-                  <code>{quickstart(state.providers)}</code>
-                </pre>
-              </div>
-
-              <div className="flex flex-wrap items-center gap-3 text-sm">
-                <a
-                  href="https://github.com/relay-llm/sdk"
-                  className="rounded-full border border-border bg-white/[0.02] px-4 py-2 text-muted transition-colors hover:border-border-strong hover:text-fg"
+            <div className="border border-border-strong bg-bg p-1">
+              <div className="flex items-center gap-3 bg-bg-soft px-4 py-3 font-mono text-[14px]">
+                <span className="flex-1 select-all truncate text-fg">
+                  {state.apiKey}
+                </span>
+                <button
+                  onClick={copyKey}
+                  className={`border-b pb-0.5 text-[11px] uppercase tracking-[0.18em] transition-colors ${
+                    copied
+                      ? "border-[#7ee7b0] text-[#7ee7b0]"
+                      : "border-fg text-fg hover:border-accent hover:text-accent"
+                  }`}
                 >
-                  Read the docs →
-                </a>
-                <a
-                  href="https://www.npmjs.com/package/@relay-api/sdk"
-                  className="rounded-full border border-border bg-white/[0.02] px-4 py-2 text-muted transition-colors hover:border-border-strong hover:text-fg"
-                >
-                  npm page →
-                </a>
+                  {copied ? "copied" : "copy"}
+                </button>
               </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
+            </div>
+
+            <div>
+              <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted">
+                — quickstart
+              </p>
+              <pre className="mt-3 overflow-x-auto border border-border bg-bg p-4 font-mono text-[12.5px] leading-6 text-fg/85">
+                <code>{quickstart(state.providers)}</code>
+              </pre>
+            </div>
+
+            <div className="flex flex-wrap items-baseline gap-x-6 gap-y-2 border-t border-border pt-6 font-mono text-[12px] uppercase tracking-[0.18em]">
+              <a
+                href="https://github.com/relay-llm/sdk"
+                className="text-fg underline-offset-4 hover:text-accent hover:underline"
+              >
+                read the docs →
+              </a>
+              <a
+                href="https://www.npmjs.com/package/@relay-api/sdk"
+                className="text-muted underline-offset-4 hover:text-fg hover:underline"
+              >
+                npm →
+              </a>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
@@ -310,32 +281,24 @@ function Field({
   children: React.ReactNode;
 }) {
   return (
-    <label className="flex flex-col gap-2">
-      <span className="text-xs uppercase tracking-[0.15em] text-muted">
+    <label className="flex flex-col gap-2.5">
+      <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted">
         {label}
       </span>
       {children}
-      {hint && <span className="text-xs text-muted">{hint}</span>}
+      {hint && (
+        <span className="font-mono text-[11px] text-muted">{hint}</span>
+      )}
     </label>
   );
 }
 
-function Spinner() {
-  return (
-    <span
-      aria-hidden
-      className="inline-block h-3.5 w-3.5 animate-spin rounded-full border-2 border-bg/40 border-t-bg"
-    />
-  );
-}
-
 function quickstart(providers: string[]): string {
-  const model =
-    providers.includes("anthropic")
-      ? "claude-sonnet-4-6"
-      : providers.includes("openai")
-        ? "gpt-4o"
-        : "gemini-2.5-flash";
+  const model = providers.includes("anthropic")
+    ? "claude-sonnet-4-6"
+    : providers.includes("openai")
+      ? "gpt-4o"
+      : "gemini-2.5-flash";
   return `import { Relay } from "@relay-api/sdk";
 
 const llm = new Relay({

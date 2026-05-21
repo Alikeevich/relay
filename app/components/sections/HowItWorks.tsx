@@ -7,27 +7,27 @@ import { Reveal } from "../ui/Reveal";
 const steps = [
   {
     n: "01",
-    title: "Drop-in the SDK",
-    body: "Swap @anthropic-ai/sdk for @relay/sdk. Same method signatures, same streaming. Your existing code keeps working.",
-    sample: "npm i @relay/sdk",
+    title: "Drop in the SDK.",
+    body: "Swap @anthropic-ai/sdk for @relay-api/sdk. Same method signatures, same streaming. Your existing code keeps working — only the import line moves.",
+    sample: "npm i @relay-api/sdk",
   },
   {
     n: "02",
-    title: "Plug in your providers",
-    body: "Paste your Anthropic and OpenAI keys into the dashboard. We encrypt them with AES-256-GCM and never log plaintext.",
-    sample: "Anthropic ✓   OpenAI ✓   Mistral ✓",
+    title: "Plug in your providers.",
+    body: "Paste your Anthropic, OpenAI or Gemini keys at /signup. We encrypt them in Cloudflare KV at rest and never log plaintext. You can revoke any time.",
+    sample: "anthropic ✓   openai ✓   gemini ✓",
   },
   {
     n: "03",
-    title: "Ship through the edge",
-    body: "Every call hits a Cloudflare Worker in 300+ cities. Cache lookup, retry policy and failover happen before bytes leave the region.",
+    title: "Ship through the edge.",
+    body: "Every call hits a Cloudflare Worker in 300+ cities. Cache lookup, retry policy and failover all happen before bytes leave the region nearest the user.",
     sample: "POST /v1/messages   →   ~28ms",
   },
   {
     n: "04",
-    title: "Watch it stay up",
-    body: "Open the dashboard. Filter requests by status, model, latency or cost. The next outage shows up as a green failover chip.",
-    sample: "uptime 99.99% · failovers handled 137",
+    title: "Watch it stay up.",
+    body: "Open the dashboard. Filter requests by status, model, latency or cost. The next outage shows up as a green failover row, not a red incident.",
+    sample: "uptime 99.99%   failovers handled 137",
   },
 ];
 
@@ -37,43 +37,44 @@ export function HowItWorks() {
     target: sectionRef,
     offset: ["start start", "end end"],
   });
-
   const lineHeight = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
 
   return (
-    <section id="how" className="relative bg-bg py-32">
-      <div className="mx-auto max-w-6xl px-6">
+    <section id="how" className="relative border-b border-border py-32">
+      <div className="mx-auto max-w-[1280px] px-6 lg:px-10">
         <Reveal>
-          <div className="text-xs uppercase tracking-[0.2em] text-muted">
-            How it works
-          </div>
+          <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted">
+            — How it works
+          </p>
         </Reveal>
         <Reveal delay={0.08}>
-          <h2 className="mt-4 max-w-3xl text-balance text-[clamp(2rem,5vw,3.5rem)] font-medium leading-[1.05] tracking-[-0.02em] text-fg">
+          <h2 className="heading-tight mt-5 max-w-3xl text-balance text-[clamp(2rem,4.8vw,3.5rem)] font-medium text-fg">
             From <span className="font-mono text-fg">npm i</span> to{" "}
-            <span className="font-display italic text-gradient-accent">
+            <em className="font-display italic text-fg-dim">
               first reliable call
-            </span>{" "}
+            </em>{" "}
             in four steps.
           </h2>
         </Reveal>
       </div>
 
-      <div
-        ref={sectionRef}
-        className="relative mx-auto mt-16 max-w-5xl px-6"
-      >
-        <div className="absolute left-[calc(1.5rem+40px)] top-0 hidden h-full w-px -translate-x-1/2 bg-border md:block lg:left-[calc(1.5rem+50px)]" />
+      <div ref={sectionRef} className="relative mx-auto mt-20 max-w-[1280px] px-6 lg:px-10">
+        {/* Vertical timeline rail at left rail */}
+        <div
+          aria-hidden
+          className="absolute left-[calc(1.5rem+8px)] top-0 hidden h-full w-px bg-border md:block lg:left-[calc(2.5rem+8px)]"
+        />
         <motion.div
+          aria-hidden
           style={{ height: lineHeight }}
-          className="absolute left-[calc(1.5rem+40px)] top-0 hidden w-px -translate-x-1/2 bg-gradient-to-b from-accent via-accent-2 to-transparent md:block lg:left-[calc(1.5rem+50px)]"
+          className="absolute left-[calc(1.5rem+8px)] top-0 hidden w-px bg-fg md:block lg:left-[calc(2.5rem+8px)]"
         />
 
-        <div className="space-y-24">
+        <ol className="space-y-24 lg:pl-24">
           {steps.map((s, i) => (
             <Step key={i} step={s} index={i} />
           ))}
-        </div>
+        </ol>
       </div>
     </section>
   );
@@ -86,47 +87,29 @@ function Step({
   step: (typeof steps)[number];
   index: number;
 }) {
-  const ref = useRef<HTMLDivElement | null>(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start 70%", "end 30%"],
-  });
-  const scale = useTransform(scrollYProgress, [0, 0.5], [0.8, 1]);
-  const glow = useTransform(scrollYProgress, [0, 0.5], [0, 1]);
-
   return (
-    <div ref={ref} className="relative grid grid-cols-1 gap-6 md:grid-cols-[80px_1fr] md:gap-10 lg:grid-cols-[100px_1fr]">
-      <div className="flex justify-start md:justify-center">
-        <motion.div
-          style={{ scale }}
-          className="relative flex h-[68px] w-[68px] items-center justify-center rounded-2xl border border-border bg-bg-soft font-display text-2xl text-fg"
-        >
-          <motion.div
-            style={{ opacity: glow }}
-            aria-hidden
-            className="absolute inset-0 rounded-2xl bg-gradient-to-br from-accent/40 to-accent-2/40 blur-xl"
-          />
-          <span className="relative">{step.n}</span>
-        </motion.div>
+    <motion.li
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-60px" }}
+      transition={{ duration: 0.7, delay: index * 0.05 }}
+      className="grid grid-cols-1 gap-x-12 gap-y-4 md:grid-cols-[80px_1fr]"
+    >
+      <div className="font-mono text-[12px] uppercase tracking-[0.22em] text-muted">
+        Step {step.n}
       </div>
-      <motion.div
-        initial={{ opacity: 0, y: 24 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-60px" }}
-        transition={{ duration: 0.7, delay: index * 0.05 }}
-        className="pt-3"
-      >
-        <h3 className="text-2xl font-medium tracking-tight text-fg md:text-3xl">
+      <div>
+        <h3 className="heading-tight text-balance text-[clamp(1.6rem,3vw,2.25rem)] font-medium text-fg">
           {step.title}
         </h3>
-        <p className="mt-3 max-w-xl text-pretty text-muted md:text-lg">
+        <p className="mt-4 max-w-[600px] text-pretty text-[16.5px] leading-relaxed text-fg-dim">
           {step.body}
         </p>
-        <div className="mt-5 inline-flex items-center gap-2 rounded-full border border-border bg-white/[0.03] px-4 py-2 font-mono text-xs text-muted">
-          <span className="h-1.5 w-1.5 rounded-full bg-accent-2" />
-          {step.sample}
-        </div>
-      </motion.div>
-    </div>
+        <p className="mt-6 font-mono text-[12.5px] text-muted">
+          <span className="select-none text-border-strong">$&nbsp;</span>
+          <span className="select-all">{step.sample}</span>
+        </p>
+      </div>
+    </motion.li>
   );
 }

@@ -2,14 +2,12 @@
 
 import { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
-import { IconPlus } from "@tabler/icons-react";
 import { Reveal } from "../ui/Reveal";
-import { cn } from "../../lib/cn";
 
 const faqs = [
   {
     q: "Do I have to give Relay my OpenAI / Anthropic keys?",
-    a: "Yes — we run BYOK. You stay in control of your provider bills and rate limits, and we encrypt your keys at rest with AES-256-GCM. They never leave the Cloudflare environment in plaintext.",
+    a: "Yes — we run BYOK. You stay in control of your provider bills and rate limits, and we encrypt your keys at rest. They never leave the Cloudflare environment in plaintext.",
   },
   {
     q: "How is this different from OpenRouter or Helicone?",
@@ -34,69 +32,65 @@ const faqs = [
 ];
 
 export function FAQ() {
-  const [open, setOpen] = useState(0);
+  const [open, setOpen] = useState<number>(0);
   return (
-    <section id="faq" className="relative bg-bg py-32">
-      <div className="mx-auto max-w-4xl px-6">
-        <Reveal>
-          <div className="text-xs uppercase tracking-[0.2em] text-muted">
-            FAQ
+    <section id="faq" className="relative border-b border-border py-32">
+      <div className="mx-auto max-w-[1280px] px-6 lg:px-10">
+        <div className="grid grid-cols-1 gap-x-16 gap-y-10 lg:grid-cols-[260px_1fr]">
+          <div>
+            <Reveal>
+              <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted">
+                — FAQ
+              </p>
+            </Reveal>
+            <Reveal delay={0.08}>
+              <h2 className="heading-tight mt-5 text-balance text-[clamp(2rem,4.5vw,3.25rem)] font-medium text-fg">
+                Honest{" "}
+                <em className="font-display italic text-fg-dim">answers</em>,
+                upfront.
+              </h2>
+            </Reveal>
           </div>
-        </Reveal>
-        <Reveal delay={0.08}>
-          <h2 className="mt-4 max-w-3xl text-balance text-[clamp(2rem,5vw,3.5rem)] font-medium leading-[1.05] tracking-[-0.02em] text-fg">
-            The honest answers,{" "}
-            <span className="font-display italic text-gradient-accent">
-              upfront.
-            </span>
-          </h2>
-        </Reveal>
 
-        <div className="mt-12 divide-y divide-border rounded-3xl border border-border bg-bg-soft">
-          {faqs.map((f, i) => {
-            const isOpen = open === i;
-            return (
-              <button
-                key={i}
-                onClick={() => setOpen(isOpen ? -1 : i)}
-                className="group block w-full px-6 py-6 text-left transition-colors hover:bg-white/[0.02]"
-              >
-                <div className="flex items-start justify-between gap-6">
-                  <span className="text-lg font-medium text-fg">{f.q}</span>
-                  <motion.span
-                    animate={{ rotate: isOpen ? 45 : 0 }}
-                    transition={{
-                      type: "spring",
-                      stiffness: 350,
-                      damping: 22,
-                    }}
-                    className={cn(
-                      "flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-border bg-white/[0.03] transition-colors",
-                      isOpen && "border-border-strong bg-white/[0.06]"
-                    )}
-                  >
-                    <IconPlus size={14} className="text-fg" />
-                  </motion.span>
-                </div>
-                <AnimatePresence initial={false}>
-                  {isOpen && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{
-                        duration: 0.35,
-                        ease: [0.22, 1, 0.36, 1],
-                      }}
-                      className="overflow-hidden"
+          <div className="border-t border-border">
+            {faqs.map((f, i) => {
+              const isOpen = open === i;
+              return (
+                <button
+                  key={i}
+                  onClick={() => setOpen(isOpen ? -1 : i)}
+                  className="group block w-full border-b border-border py-7 text-left transition-colors hover:bg-white/[0.015]"
+                >
+                  <div className="flex items-start justify-between gap-6">
+                    <span className="text-[18px] font-medium leading-snug text-fg">
+                      {f.q}
+                    </span>
+                    <span
+                      className={`mt-1 font-mono text-[18px] leading-none text-muted transition-colors ${isOpen ? "text-fg" : ""}`}
+                      aria-hidden
                     >
-                      <p className="pt-4 text-pretty text-muted">{f.a}</p>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </button>
-            );
-          })}
+                      {isOpen ? "−" : "+"}
+                    </span>
+                  </div>
+                  <AnimatePresence initial={false}>
+                    {isOpen && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+                        className="overflow-hidden"
+                      >
+                        <p className="max-w-[640px] pt-4 text-[15.5px] leading-relaxed text-fg-dim">
+                          {f.a}
+                        </p>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </button>
+              );
+            })}
+          </div>
         </div>
       </div>
     </section>
