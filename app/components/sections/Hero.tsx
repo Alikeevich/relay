@@ -1,58 +1,75 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { motion } from "motion/react";
 import { LiveLog } from "../ui/LiveLog";
 import { NpmCopy } from "../ui/NpmCopy";
 
+// Carrier-pigeon / falcon imagery — chosen for the relay metaphor (a
+// messenger that always finds home). Hot-linking against Unsplash via
+// remotePatterns in next.config.ts. To swap: drop your own jpg into
+// public/brand/mascot.jpg and replace this URL.
+const MASCOT_URL =
+  "https://images.unsplash.com/photo-1574068468668-a05a11f871da?auto=format&fit=crop&w=1800&q=80";
+
 /**
- * Editorial hero — asymmetric, no glass, no glow, no status pill.
- *
- * Headline is left-aligned and carries its own emphasis through type
- * weight + a single italic accent. The visual anchor on the right is a
- * live log of real Relay events (retry + failover + cache) rather than
- * decorative status chips.
- *
- * This composition replaces the previous v0-style hero (centered text,
- * aurora glow, "Private beta · Built on Cloudflare Workers" pill, glass
- * code card with conic ring, floating "Anthropic down" chips).
+ * Editorial hero — full-bleed photographic mascot behind dual-column
+ * type + a live log stream. The photo is treated to black-and-white,
+ * lowered exposure, with brand chroma bloom on top so it feels like a
+ * darkroom print under a stage light, not an AI-generated splash.
  */
 export function Hero() {
   return (
-    <section className="relative isolate overflow-hidden border-b border-border">
-      {/* Subtle background — single radial vignette + film grain, no aurora */}
+    <section className="relative isolate min-h-[100dvh] overflow-hidden border-b border-border">
+      {/* ── Background mascot layer ─────────────────────────────── */}
       <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
+        <Image
+          src={MASCOT_URL}
+          alt=""
+          fill
+          priority
+          unoptimized
+          sizes="100vw"
+          className="mascot-img object-cover object-[60%_40%]"
+        />
+        {/* Brand chroma bloom — single warm-violet to cool-cyan glow */}
+        <div className="glare" />
+        {/* Heavy film grain over everything */}
+        <div className="grain grain-heavy absolute inset-0" />
+        {/* Vignette so type wins centre */}
+        <div className="vignette absolute inset-0" />
+        {/* Final colour wash darkening the right side under the log */}
         <div
           className="absolute inset-0"
           style={{
             background:
-              "radial-gradient(60% 50% at 75% 35%, rgba(167,139,250,0.07) 0%, transparent 70%)",
+              "linear-gradient(90deg, rgba(11,10,13,0.55) 0%, rgba(11,10,13,0.85) 100%)",
           }}
         />
-        <div className="noise absolute inset-0" />
       </div>
 
-      <div className="mx-auto max-w-[1280px] px-6 pt-36 pb-28 lg:px-10 lg:pt-44 lg:pb-32">
-        <div className="grid grid-cols-1 gap-x-12 gap-y-16 lg:grid-cols-[1.35fr_1fr] lg:items-end">
-          {/* ── Left: type-first heading ────────────────────────────── */}
-          <div>
-            <motion.p
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-              className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted"
-            >
-              Relay&nbsp;&nbsp;//&nbsp;&nbsp;reliable LLM API delivery
-            </motion.p>
+      <div className="relative mx-auto flex min-h-[100dvh] max-w-[1280px] flex-col px-6 pt-32 pb-16 lg:px-10 lg:pt-36">
+        <motion.p
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted"
+        >
+          Relay&nbsp;&nbsp;//&nbsp;&nbsp;reliable LLM API delivery
+        </motion.p>
 
-            <h1 className="heading-tight mt-7 max-w-[820px] text-balance text-[clamp(2.85rem,7vw,5.6rem)] font-medium text-fg">
+        <div className="mt-auto grid grid-cols-1 gap-x-14 gap-y-12 pt-12 lg:grid-cols-[1fr_1.1fr] lg:items-end">
+          {/* ── Left: type-first heading ──────────────────────── */}
+          <div>
+            <h1 className="heading-tight text-balance text-[clamp(2.6rem,6.8vw,5.4rem)] font-medium text-fg">
               <Reveal delay={0.05}>
                 <span className="block">Your AI calls keep</span>
               </Reveal>
-              <Reveal delay={0.12}>
+              <Reveal delay={0.13}>
                 <span className="block">
                   working&nbsp;
-                  <em className="font-display italic text-fg-dim">
+                  <em className="font-display italic text-accent-em">
                     when providers don&apos;t.
                   </em>
                 </span>
@@ -63,32 +80,34 @@ export function Hero() {
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.45 }}
-              className="mt-10 max-w-[540px] text-pretty text-lg leading-[1.55] text-fg-dim lg:text-[19px]"
+              className="mt-8 max-w-[520px] text-pretty text-[17px] leading-[1.55] text-fg-dim"
             >
               I rewrote retry-and-failover for LLM APIs in four projects, each
               time with a new bug. Relay is the version you import instead —
-              same SDK shape you already use, plus auto-retry, provider
-              failover, and a cache that stops you paying twice.
+              same SDK shape, plus auto-retry, provider failover, and a cache
+              that stops you paying twice.
             </motion.p>
 
             <motion.div
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.6 }}
-              className="mt-10 flex flex-col items-start gap-6 sm:flex-row sm:items-center"
+              className="mt-9 flex flex-col items-start gap-5 sm:flex-row sm:items-center sm:gap-7"
             >
               <Link
                 href="/signup"
-                className="group inline-flex items-baseline gap-3 rounded-none border-b border-fg pb-1 text-fg transition-colors hover:border-accent hover:text-accent"
+                className="group inline-flex items-baseline gap-3 border-b border-fg pb-1 text-fg transition-colors hover:border-accent hover:text-accent"
               >
-                <span className="text-base font-medium">Get an API key</span>
-                <span className="text-base transition-transform group-hover:translate-x-0.5">→</span>
+                <span className="text-[15px] font-medium">Get an API key</span>
+                <span className="text-[15px] transition-transform group-hover:translate-x-0.5">
+                  →
+                </span>
               </Link>
               <Link
                 href="https://www.npmjs.com/package/@relay-api/sdk"
-                className="text-base text-muted underline-offset-4 transition-colors hover:text-fg hover:underline"
+                className="text-[15px] text-fg-dim underline-offset-4 transition-colors hover:text-fg hover:underline"
               >
-                Read the SDK on npm
+                npm  /  @relay-api/sdk
               </Link>
             </motion.div>
 
@@ -96,34 +115,32 @@ export function Hero() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 1, delay: 0.85 }}
-              className="mt-12"
+              className="mt-10"
             >
               <NpmCopy />
             </motion.div>
           </div>
 
-          {/* ── Right: live log demo ────────────────────────────────── */}
+          {/* ── Right: live log demo ──────────────────────────── */}
           <motion.div
-            initial={{ opacity: 0, y: 12 }}
+            initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 1.1, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            className="relative"
           >
             <LiveLog />
-            <p className="mt-3 max-w-[420px] font-mono text-[11px] leading-relaxed text-muted">
-              Live stream from an example relay account — retries, failover,
-              and cache hits flow through your own dashboard exactly like this.
+            <p className="mt-4 max-w-[460px] font-mono text-[11px] leading-relaxed text-muted">
+              Live stream from a relay account — same shape you see in your
+              dashboard. Newest event types in at the top, older ones fade out
+              of the bottom of the window.
             </p>
           </motion.div>
         </div>
 
-        {/* Bottom rule with one factual line. Not a badge, not a pill. */}
-        <div className="mt-24 flex flex-col items-baseline justify-between gap-3 border-t border-border pt-6 text-[13px] text-muted sm:flex-row">
-          <span className="font-mono">
-            edge proxy · ~30ms overhead · BYOK
-          </span>
-          <span className="font-mono">
-            anthropic / openai / gemini · failover chain
-          </span>
+        {/* Bottom rule */}
+        <div className="mt-16 flex flex-col items-baseline justify-between gap-3 border-t border-border pt-5 font-mono text-[12px] text-muted sm:flex-row">
+          <span>edge proxy · ~30ms overhead · BYOK</span>
+          <span>anthropic · openai · gemini · failover chain</span>
         </div>
       </div>
     </section>

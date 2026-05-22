@@ -85,24 +85,85 @@
     border-color: var(--color-border);
   }
 
-  /* Marquee — retained, used for provider strip. */
+  /* Marquee — items are tripled in TSX, so we slide by exactly 33.333%
+     to perfectly align with the second copy and avoid any visible jump. */
   @keyframes marquee {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(-50%); }
+    0%   { transform: translate3d(0, 0, 0); }
+    100% { transform: translate3d(-33.3333%, 0, 0); }
   }
   .animate-marquee {
-    animation: marquee 35s linear infinite;
+    animation: marquee 40s linear infinite;
+    will-change: transform;
   }
 
-  /* Subtle film-grain noise — adds tactile feel without "AI glow". */
+  /* Heavy film-grain noise — proper grunge texture. Tiled SVG turbulence
+     scaled up. Higher opacity than before, mixed in screen mode so it
+     reads as illuminated dust rather than dust on a screen. */
+  .grain {
+    position: relative;
+  }
+  .grain::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence baseFrequency='0.92' numOctaves='3' seed='7' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.8 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    opacity: 0.14;
+    mix-blend-mode: screen;
+    z-index: 1;
+  }
+  .grain-heavy::after {
+    opacity: 0.22;
+  }
+
+  /* Backwards-compat — old name kept so legacy components keep grain. */
+  .noise {
+    position: relative;
+  }
   .noise::after {
     content: "";
     position: absolute;
     inset: 0;
     pointer-events: none;
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence baseFrequency='0.9' numOctaves='2' seed='4'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.42 0'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.5'/></svg>");
-    opacity: 0.06;
-    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence baseFrequency='0.92' numOctaves='3' seed='9' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.8 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    opacity: 0.12;
+    mix-blend-mode: screen;
+  }
+
+  /* Chromatic glare — places an accent-coloured bloom over content. Used
+     selectively (hero mascot, accent corners). Animated subtly. */
+  .glare {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(50% 40% at 28% 32%, rgba(167, 139, 250, 0.45), transparent 70%),
+      radial-gradient(40% 35% at 78% 70%, rgba(34, 211, 238, 0.30), transparent 70%);
+    mix-blend-mode: screen;
+    filter: blur(20px);
+    animation: glare-drift 18s ease-in-out infinite alternate;
+  }
+  @keyframes glare-drift {
+    0%   { transform: translate3d(0, 0, 0) scale(1); }
+    50%  { transform: translate3d(-2%, 1%, 0) scale(1.04); }
+    100% { transform: translate3d(2%, -1%, 0) scale(0.98); }
+  }
+
+  /* Photographic mascot treatment — applied to <img> behind hero. Black
+     and white, lifted shadows, plus violet/cyan duotone overlay through
+     a blend layer. The image is dimmed so type still reads on top. */
+  .mascot-img {
+    filter: grayscale(1) contrast(1.08) brightness(0.75);
+    opacity: 0.55;
+  }
+
+  /* A textured "old-paper" vignette — darker edges so type wins centre */
+  .vignette::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(120% 80% at 50% 50%, transparent 40%, rgba(11,10,13,0.7) 100%);
   }
 
   /* Cursor caret used inside the live log demo. */

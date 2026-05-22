@@ -13,10 +13,11 @@ type State =
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
 /**
- * Editorial waitlist section — left column tells you what you're signing
- * up for, right column is the form. No aurora glow, no glass card, no
- * conic gradient border on success state. Confetti stays — it's a real
- * delight moment after a click, not chrome decoration.
+ * Waitlist — pitched as a personal note from the founder.
+ *
+ * Big block of warm copy on the left, focused form panel on the right.
+ * No aurora, no glass — but the form has weight: solid card, prominent
+ * CTA, real expectation of what the user gets back. Confetti stays.
  */
 export function Waitlist() {
   const [email, setEmail] = useState("");
@@ -37,10 +38,7 @@ export function Waitlist() {
     e.preventDefault();
     if (state.kind === "loading") return;
     if (!EMAIL_RE.test(email)) {
-      setState({
-        kind: "error",
-        message: "Hmm — that email doesn't look right.",
-      });
+      setState({ kind: "error", message: "That email doesn't look right." });
       return;
     }
     const fd = new FormData(formRef.current!);
@@ -96,10 +94,20 @@ export function Waitlist() {
   }
 
   return (
-    <section id="waitlist" className="relative border-b border-border py-32">
+    <section
+      id="waitlist"
+      className="relative isolate overflow-hidden border-b border-border py-32"
+    >
+      {/* Subtle grain + accent glare on this section so it reads as a
+          "warm" moment rather than a sterile form. */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
+        <div className="glare opacity-50" />
+        <div className="grain absolute inset-0" />
+      </div>
+
       <div className="mx-auto max-w-[1280px] px-6 lg:px-10">
-        <div className="grid grid-cols-1 gap-x-16 gap-y-12 lg:grid-cols-[1fr_1.05fr]">
-          {/* Left — editorial pitch */}
+        <div className="grid grid-cols-1 gap-x-16 gap-y-12 lg:grid-cols-[1.1fr_1fr]">
+          {/* ── Left: founder note ──────────────────────────── */}
           <div>
             <Reveal>
               <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted">
@@ -107,28 +115,45 @@ export function Waitlist() {
               </p>
             </Reveal>
             <Reveal delay={0.08}>
-              <h2 className="heading-tight mt-5 max-w-[480px] text-balance text-[clamp(2rem,4.5vw,3.5rem)] font-medium text-fg">
+              <h2 className="heading-tight mt-5 max-w-[560px] text-balance text-[clamp(2rem,4.8vw,3.5rem)] font-medium text-fg">
                 Be the first to ship on a{" "}
-                <em className="font-display italic text-fg-dim">reliable</em>{" "}
+                <em className="font-display italic text-accent-em">
+                  reliable
+                </em>{" "}
                 LLM stack.
               </h2>
             </Reveal>
             <Reveal delay={0.16}>
-              <p className="mt-6 max-w-[420px] text-[16.5px] leading-relaxed text-fg-dim">
-                Already have a provider key? Skip the queue —{" "}
+              <div className="mt-7 max-w-[500px] space-y-5 text-[16.5px] leading-[1.6] text-fg-dim">
+                <p>
+                  I&apos;m Alikhan. I&apos;m hand-onboarding the first hundred
+                  builders myself — pairing on the integration, listening to
+                  the bugs that ate your evening, shipping fixes the same day.
+                </p>
+                <p>
+                  Drop your email. You&apos;ll hear from me when access opens
+                  — usually within a week — with{" "}
+                  <span className="text-fg">six months of Pro on the house</span>{" "}
+                  and a short ask: what reliability pain do you wish would
+                  vanish first?
+                </p>
+                <p className="font-display italic text-fg">— Alikhan</p>
+              </div>
+            </Reveal>
+
+            <Reveal delay={0.3}>
+              <div className="mt-9 inline-block">
                 <a
                   href="/signup"
-                  className="text-fg underline underline-offset-4 transition-colors hover:text-accent"
+                  className="inline-flex items-baseline gap-2 border-b border-border pb-1 font-mono text-[12px] uppercase tracking-[0.22em] text-muted transition-colors hover:border-fg hover:text-fg"
                 >
-                  generate a Relay key now
+                  already have a provider key? skip the queue →
                 </a>
-                . Otherwise drop your email — I&apos;ll write to you the moment
-                access opens, with six months of Pro on the house.
-              </p>
+              </div>
             </Reveal>
           </div>
 
-          {/* Right — form / success */}
+          {/* ── Right: form ─────────────────────────────────── */}
           <div>
             <AnimatePresence mode="wait">
               {state.kind !== "success" ? (
@@ -138,12 +163,20 @@ export function Waitlist() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -8 }}
                   transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+                  className="border border-border bg-bg-soft p-8"
                 >
+                  <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted">
+                    — Join the waitlist
+                  </p>
+                  <h3 className="heading-tight mt-3 text-[22px] font-medium text-fg">
+                    Get an early-access invite.
+                  </h3>
+
                   <form
                     ref={formRef}
                     onSubmit={onSubmit}
                     noValidate
-                    className="flex flex-col gap-3"
+                    className="mt-7 flex flex-col gap-4"
                   >
                     <input
                       type="text"
@@ -153,10 +186,11 @@ export function Waitlist() {
                       aria-hidden
                       className="absolute -left-[9999px] h-0 w-0 opacity-0"
                     />
-                    <label className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted">
-                      your email
-                    </label>
-                    <div className="flex flex-col gap-2 sm:flex-row">
+
+                    <label className="flex flex-col gap-2">
+                      <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted">
+                        your email
+                      </span>
                       <input
                         type="email"
                         required
@@ -164,7 +198,7 @@ export function Waitlist() {
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="you@startup.dev"
                         disabled={state.kind === "loading"}
-                        className={`w-full flex-1 border-b bg-transparent px-1 py-3 text-[18px] text-fg placeholder:text-muted/55 focus:outline-none ${
+                        className={`w-full border-b bg-transparent px-1 py-2.5 text-[17px] text-fg placeholder:text-muted/55 focus:outline-none ${
                           state.kind === "error"
                             ? "border-[#ff8593]"
                             : emailValid === true
@@ -172,25 +206,24 @@ export function Waitlist() {
                               : "border-border-strong focus:border-fg"
                         } disabled:opacity-70`}
                       />
-                      <button
-                        type="submit"
-                        disabled={state.kind === "loading"}
-                        className="inline-flex items-baseline justify-center gap-2 border-b border-fg pb-3 text-[14px] font-medium uppercase tracking-[0.18em] text-fg transition-colors hover:border-accent hover:text-accent disabled:cursor-not-allowed disabled:opacity-70 sm:w-[180px]"
-                      >
-                        {state.kind === "loading" ? (
-                          "joining…"
-                        ) : (
-                          <>
-                            join waitlist <span aria-hidden>→</span>
-                          </>
-                        )}
-                      </button>
-                    </div>
+                    </label>
+
+                    <button
+                      type="submit"
+                      disabled={state.kind === "loading"}
+                      className="mt-4 inline-flex w-full items-center justify-between gap-3 bg-fg px-4 py-3.5 text-[14px] font-medium text-bg transition-colors hover:bg-accent disabled:cursor-not-allowed disabled:opacity-70"
+                    >
+                      <span>
+                        {state.kind === "loading"
+                          ? "joining…"
+                          : "Send me an invite"}
+                      </span>
+                      <span aria-hidden>→</span>
+                    </button>
 
                     <AnimatePresence>
                       {state.kind === "error" && (
                         <motion.div
-                          key="err"
                           initial={{ opacity: 0, y: -4 }}
                           animate={{ opacity: 1, y: 0 }}
                           exit={{ opacity: 0, y: -4 }}
@@ -202,13 +235,11 @@ export function Waitlist() {
                     </AnimatePresence>
                   </form>
 
-                  <Reveal delay={0.3}>
-                    <div className="mt-10 grid grid-cols-3 border-t border-border pt-6 font-mono text-[12px] text-muted">
-                      <Stat n="487" l="builders waiting" />
-                      <Stat n="$0" l="setup cost" />
-                      <Stat n="<5 min" l="to first call" />
-                    </div>
-                  </Reveal>
+                  <div className="mt-7 grid grid-cols-3 gap-4 border-t border-border pt-5 font-mono text-[11px] uppercase tracking-[0.16em] text-muted">
+                    <Stat n="487" l="builders waiting" />
+                    <Stat n="$0" l="setup cost" />
+                    <Stat n="<5 min" l="to first call" />
+                  </div>
                 </motion.div>
               ) : (
                 <motion.div
@@ -217,19 +248,19 @@ export function Waitlist() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-                  className="border-t border-fg pt-6"
+                  className="border border-fg bg-bg-soft p-8"
                 >
                   <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-[#7ee7b0]">
                     — you&apos;re on the list
                   </p>
-                  <h3 className="mt-4 text-balance text-[28px] font-medium leading-tight text-fg">
+                  <h3 className="heading-tight mt-3 text-[28px] font-medium leading-tight text-fg">
                     Builder{" "}
                     <CountUp value={state.position} className="font-display" />{" "}
                     in the queue.
                   </h3>
                   <p className="mt-4 max-w-[460px] text-[15.5px] leading-relaxed text-fg-dim">
-                    We&apos;ll email <span className="text-fg">{email}</span>{" "}
-                    the moment access opens.
+                    Invite lands at <span className="text-fg">{email}</span>{" "}
+                    when access opens — usually within a week.
                   </p>
 
                   <div className="mt-8 border-t border-border pt-6">
@@ -242,7 +273,7 @@ export function Waitlist() {
                     <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center">
                       <button
                         onClick={copyReferral}
-                        className="group flex flex-1 items-center justify-between gap-3 border border-border bg-transparent px-4 py-3 text-left font-mono text-[12.5px] text-muted transition-colors hover:border-border-strong hover:text-fg"
+                        className="group flex flex-1 items-center justify-between gap-3 border border-border bg-bg px-4 py-3 text-left font-mono text-[12.5px] text-muted transition-colors hover:border-fg hover:text-fg"
                       >
                         <span className="truncate">
                           {state.referral.replace(/^https?:\/\//, "")}
@@ -257,7 +288,7 @@ export function Waitlist() {
                       </button>
                       <button
                         onClick={shareOnX}
-                        className="inline-flex items-baseline justify-center gap-2 border-b border-fg pb-2 font-mono text-[12px] uppercase tracking-[0.18em] text-fg transition-colors hover:border-accent hover:text-accent"
+                        className="inline-flex items-center justify-center gap-2 bg-fg px-5 py-3 font-mono text-[12px] uppercase tracking-[0.18em] text-bg transition-colors hover:bg-accent"
                       >
                         share on x <span aria-hidden>→</span>
                       </button>
@@ -276,19 +307,13 @@ export function Waitlist() {
 function Stat({ n, l }: { n: string; l: string }) {
   return (
     <div className="flex flex-col">
-      <span className="font-display text-[22px] text-fg">{n}</span>
-      <span className="mt-1 text-[11px] uppercase tracking-[0.16em]">{l}</span>
+      <span className="font-display text-[22px] normal-case text-fg">{n}</span>
+      <span className="mt-1">{l}</span>
     </div>
   );
 }
 
-function CountUp({
-  value,
-  className,
-}: {
-  value: number;
-  className?: string;
-}) {
+function CountUp({ value, className }: { value: number; className?: string }) {
   const [n, setN] = useState(0);
   useEffect(() => {
     let raf = 0;
