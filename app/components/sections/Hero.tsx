@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { motion } from "motion/react";
 import { LiveLog } from "../ui/LiveLog";
@@ -25,14 +24,18 @@ export function Hero() {
     <section className="relative isolate min-h-[100dvh] overflow-hidden border-b border-border">
       {/* ── Background mascot layer ─────────────────────────────── */}
       <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
-        <Image
+        {/* Plain <img> rather than next/image — the photo is purely
+            decorative, Vercel's image-optimisation pipeline would only
+            add weight, and remotePatterns config is finicky on
+            Next 16. */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
           src={MASCOT_URL}
           alt=""
-          fill
-          priority
-          unoptimized
-          sizes="100vw"
-          className="mascot-img object-cover object-[70%_30%]"
+          aria-hidden
+          loading="eager"
+          fetchPriority="high"
+          className="mascot-img absolute inset-0 h-full w-full object-cover object-[70%_30%]"
         />
         {/* Brand chroma bloom — single warm-violet to cool-cyan glow */}
         <div className="glare" />

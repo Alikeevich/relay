@@ -1,15 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Whitelist Unsplash for next/image hot-linking (hero mascot photo).
-  images: {
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "images.unsplash.com",
-      },
-    ],
-  },
+  // Intentionally minimal — no remotePatterns since we use plain <img> for
+  // the hero mascot (decorative, no Next image optimisation needed).
 };
 
 export default nextConfig;
