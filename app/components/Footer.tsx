@@ -1,17 +1,44 @@
+const MASCOT_URL =
+  "https://images.unsplash.com/photo-1672079743723-ac70610b6978?auto=format&fit=crop&w=1600&q=80";
+
 export function Footer() {
   return (
-    <footer className="relative border-t border-border bg-bg">
-      <div className="mx-auto max-w-[1280px] px-6 py-20 lg:px-10">
+    <footer className="relative isolate overflow-hidden border-t border-border bg-bg">
+      {/* Subtle owl haunting the bottom-right corner. Heavily grained,
+          low opacity — present but never competes with copy. */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 -z-10 overflow-hidden"
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={MASCOT_URL}
+          alt=""
+          aria-hidden
+          loading="lazy"
+          style={{ transform: "scaleX(-1)" }}
+          className="absolute -bottom-24 -right-24 h-[120%] w-[55%] object-cover object-[30%_30%] opacity-[0.07] saturate-0 contrast-110 mix-blend-screen"
+        />
+        {/* A soft brand-coloured veil on top so it tints accent */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(45% 60% at 80% 70%, rgba(167,139,250,0.10) 0%, transparent 70%)",
+          }}
+        />
+        {/* Heavy grain over the whole footer */}
+        <div className="grain grain-heavy absolute inset-0" />
+        {/* Fade to bg at edges */}
+        <div className="absolute inset-0 bg-gradient-to-t from-bg via-bg/85 to-bg/60" />
+      </div>
+
+      <div className="relative mx-auto max-w-[1280px] px-6 py-20 lg:px-10">
         <div className="grid grid-cols-1 gap-12 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
           <div>
-            <div className="flex items-baseline gap-3">
-              <span className="font-display text-[28px] leading-none tracking-tight text-fg">
-                Relay
-              </span>
-              <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted">
-                v0.0.1
-              </span>
-            </div>
+            <span className="font-display text-[32px] leading-none tracking-tight text-fg">
+              Relay
+            </span>
             <p className="mt-5 max-w-xs text-pretty text-sm leading-relaxed text-muted">
               Reliable delivery layer for LLM APIs. Built at the edge so AI
               agents stay up when providers don&apos;t.
@@ -74,10 +101,14 @@ export function Footer() {
         </div>
       </div>
 
-      <div className="border-t border-border">
+      <div className="relative border-t border-border">
         <div className="mx-auto flex max-w-[1280px] flex-col items-start justify-between gap-3 px-6 py-6 font-mono text-[12px] text-muted sm:flex-row sm:items-center lg:px-10">
-          <span>© {new Date().getFullYear()}  ·  Relay  ·  Built in Kazakhstan</span>
-          <span>cloudflare workers · next.js · supabase · paddle</span>
+          <span>
+            © {new Date().getFullYear()}  ·  Relay  ·  Built in Kazakhstan
+          </span>
+          <span>
+            cloudflare workers · next.js · supabase · paddle
+          </span>
         </div>
       </div>
     </footer>

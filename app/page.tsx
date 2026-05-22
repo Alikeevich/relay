@@ -3,6 +3,7 @@ import { Hero } from "./components/sections/Hero";
 import { Marquee } from "./components/ui/Marquee";
 import { Problems } from "./components/sections/Problems";
 import { Solution } from "./components/sections/Solution";
+import { Anecdote } from "./components/sections/Anecdote";
 import { Features } from "./components/sections/Features";
 import { HowItWorks } from "./components/sections/HowItWorks";
 import { Pricing } from "./components/sections/Pricing";
@@ -30,6 +31,7 @@ export default function Home() {
         />
         <Problems />
         <Solution />
+        <Anecdote />
         <Features />
         <HowItWorks />
         <Pricing />

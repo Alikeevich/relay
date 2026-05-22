@@ -27,7 +27,8 @@ export function Hero() {
         {/* Plain <img> rather than next/image — the photo is purely
             decorative, Vercel's image-optimisation pipeline would only
             add weight, and remotePatterns config is finicky on
-            Next 16. */}
+            Next 16. Mirrored horizontally so the bird looks toward the
+            heading rather than away from it. */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={MASCOT_URL}
@@ -35,7 +36,8 @@ export function Hero() {
           aria-hidden
           loading="eager"
           fetchPriority="high"
-          className="mascot-img absolute inset-0 h-full w-full object-cover object-[70%_30%]"
+          style={{ transform: "scaleX(-1)" }}
+          className="mascot-img absolute inset-0 h-full w-full object-cover object-[30%_30%]"
         />
         {/* Brand chroma bloom — single warm-violet to cool-cyan glow */}
         <div className="glare" />
