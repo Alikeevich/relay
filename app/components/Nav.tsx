@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { cn } from "../lib/cn";
 
@@ -36,13 +37,13 @@ export function Nav() {
       )}
     >
       <nav className="mx-auto flex max-w-[1280px] items-center gap-8 px-6 py-4 lg:px-10">
-        <a
+        <Link
           href="/"
           className="flex items-baseline gap-2 text-fg transition-opacity hover:opacity-80"
         >
           <Mark />
           <span className="text-[17px] font-medium tracking-[-0.01em]">Relay</span>
-        </a>
+        </Link>
 
         <ul className="hidden flex-1 items-center gap-7 md:flex">
           {links.map((l) => (

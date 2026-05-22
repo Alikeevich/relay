@@ -73,12 +73,16 @@ interface RenderedLine extends LogLine {
 export function LiveLog() {
   const [tick, setTick] = useState(0);
   const [cycle, setCycle] = useState(0);
-  const startRef = useRef<number>(Date.now());
+  // Note: Date.now() is impure and must NOT be called at render time —
+  // initialise to null and stamp inside the effect.
+  const startRef = useRef<number | null>(null);
 
   useEffect(() => {
+    startRef.current = Date.now();
     let raf = 0;
     const loop = () => {
-      const elapsed = (Date.now() - startRef.current) / 1000;
+      const start = startRef.current ?? Date.now();
+      const elapsed = (Date.now() - start) / 1000;
       const newCycle = Math.floor(elapsed / CYCLE_SECONDS);
       setCycle((c) => (c !== newCycle ? newCycle : c));
       setTick(elapsed % CYCLE_SECONDS);

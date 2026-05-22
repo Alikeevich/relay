@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useRef, useState } from "react";
+import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { Reveal } from "../ui/Reveal";
 
@@ -21,17 +21,14 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
  */
 export function Waitlist() {
   const [email, setEmail] = useState("");
-  const [emailValid, setEmailValid] = useState<boolean | null>(null);
   const [state, setState] = useState<State>({ kind: "idle" });
   const [copied, setCopied] = useState(false);
   const formRef = useRef<HTMLFormElement | null>(null);
 
-  useEffect(() => {
-    if (email.length === 0) {
-      setEmailValid(null);
-      return;
-    }
-    setEmailValid(EMAIL_RE.test(email));
+  // Inline derivation — no useEffect needed.
+  const emailValid = useMemo<boolean | null>(() => {
+    if (email.length === 0) return null;
+    return EMAIL_RE.test(email);
   }, [email]);
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
