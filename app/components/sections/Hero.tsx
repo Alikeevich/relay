@@ -6,12 +6,13 @@ import { motion } from "motion/react";
 import { LiveLog } from "../ui/LiveLog";
 import { NpmCopy } from "../ui/NpmCopy";
 
-// Carrier-pigeon / falcon imagery — chosen for the relay metaphor (a
-// messenger that always finds home). Hot-linking against Unsplash via
-// remotePatterns in next.config.ts. To swap: drop your own jpg into
-// public/brand/mascot.jpg and replace this URL.
+// Eagle owl mascot — serious, sharp, head-on portrait by Jevgeni Fil on
+// Unsplash. Chosen for the watchful-but-unflinching feel that matches
+// "your agents never go down". Hot-linked via remotePatterns in
+// next.config.ts. To swap: drop your own jpg into public/brand/mascot.jpg
+// and replace this URL.
 const MASCOT_URL =
-  "https://images.unsplash.com/photo-1574068468668-a05a11f871da?auto=format&fit=crop&w=1800&q=80";
+  "https://images.unsplash.com/photo-1672079743723-ac70610b6978?auto=format&fit=crop&w=1800&q=85";
 
 /**
  * Editorial hero — full-bleed photographic mascot behind dual-column
@@ -31,7 +32,7 @@ export function Hero() {
           priority
           unoptimized
           sizes="100vw"
-          className="mascot-img object-cover object-[60%_40%]"
+          className="mascot-img object-cover object-[70%_30%]"
         />
         {/* Brand chroma bloom — single warm-violet to cool-cyan glow */}
         <div className="glare" />
