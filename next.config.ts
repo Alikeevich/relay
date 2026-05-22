@@ -1,9 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  turbopack: {
-    root: process.cwd(),
-  },
+  // Whitelist Unsplash for next/image hot-linking (hero mascot photo).
   images: {
     remotePatterns: [
       {
