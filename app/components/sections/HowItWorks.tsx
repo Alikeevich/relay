@@ -32,8 +32,7 @@ const steps = [
 ];
 
 export function HowItWorks() {
-  const railRef = useRef<HTMLOListElement | null>(null);
-  // Scroll progress through the steps container — drives the filled rail.
+  const railRef = useRef<HTMLDivElement | null>(null);
   const { scrollYProgress } = useScroll({
     target: railRef,
     offset: ["start 80%", "end 30%"],
@@ -58,19 +57,31 @@ export function HowItWorks() {
           </h2>
         </Reveal>
 
-        {/* Steps with a real rail. Number sits in a flex item next to the
-            rail, so the rail is naturally aligned with the digits. */}
-        <ol ref={railRef} className="mt-20 flex flex-col gap-20">
-          {steps.map((s, i) => (
-            <Step
-              key={s.n}
-              step={s}
-              index={i}
-              last={i === steps.length - 1}
-              filled={filled}
+        <div ref={railRef} className="relative mt-20">
+          {/* ── Single continuous rail running through every step badge.
+               Lives outside the <ol> so it's one element, not four
+               segments. The badges (h-10 = 40px) are positioned in the
+               first column with center at x=20px, so rail sits at
+               left=20px. The visible track starts at the centre of the
+               FIRST badge and ends at the centre of the LAST badge,
+               clipped via the wrapper's top-5 / bottom-5 inset. */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute left-5 top-5 bottom-5 w-px overflow-hidden"
+          >
+            <div className="absolute inset-0 bg-border" />
+            <motion.div
+              style={{ height: filled }}
+              className="absolute inset-x-0 top-0 bg-fg"
             />
-          ))}
-        </ol>
+          </div>
+
+          <ol className="relative space-y-20">
+            {steps.map((s, i) => (
+              <Step key={s.n} step={s} index={i} />
+            ))}
+          </ol>
+        </div>
       </div>
     </section>
   );
@@ -79,13 +90,9 @@ export function HowItWorks() {
 function Step({
   step,
   index,
-  last,
-  filled,
 }: {
   step: (typeof steps)[number];
   index: number;
-  last: boolean;
-  filled: ReturnType<typeof useTransform<string, string>>;
 }) {
   return (
     <motion.li
@@ -93,27 +100,13 @@ function Step({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-60px" }}
       transition={{ duration: 0.7, delay: index * 0.04 }}
-      className="grid grid-cols-[28px_1fr] gap-x-8 md:grid-cols-[80px_1fr] md:gap-x-12"
+      className="flex gap-6 md:gap-12"
     >
-      {/* Number column owns the rail. The rail is a 1px line behind the
-          number with a filled overlay clipped by the scroll progress. */}
-      <div className="relative flex flex-col items-center">
-        {/* Step number badge */}
-        <div className="relative z-10 flex h-10 w-10 items-center justify-center border border-border bg-bg font-mono text-[12px] uppercase tracking-[0.18em] text-fg">
-          {step.n}
-        </div>
-        {!last && (
-          <div className="relative mt-1 w-px flex-1 overflow-hidden">
-            <div className="absolute inset-0 bg-border" />
-            <motion.div
-              style={{ height: filled }}
-              className="absolute inset-x-0 top-0 bg-fg"
-            />
-          </div>
-        )}
+      {/* Badge — solid bg-bg so it visually breaks the rail behind it */}
+      <div className="relative z-10 flex h-10 w-10 shrink-0 items-center justify-center border border-border bg-bg font-mono text-[12px] uppercase tracking-[0.18em] text-fg">
+        {step.n}
       </div>
-
-      <div className="pt-1">
+      <div className="flex-1 pt-1">
         <h3 className="heading-tight text-balance text-[clamp(1.6rem,3vw,2.25rem)] font-medium text-fg">
           {step.title}
         </h3>

@@ -17,20 +17,20 @@ export function Footer() {
           aria-hidden
           loading="lazy"
           style={{ transform: "scaleX(-1)" }}
-          className="absolute -bottom-24 -right-24 h-[120%] w-[55%] object-cover object-[30%_30%] opacity-[0.07] saturate-0 contrast-110 mix-blend-screen"
+          className="absolute -bottom-16 -right-10 h-[125%] w-[60%] object-cover object-[30%_30%] opacity-[0.14] saturate-0 contrast-110 mix-blend-screen"
         />
         {/* A soft brand-coloured veil on top so it tints accent */}
         <div
           className="absolute inset-0"
           style={{
             background:
-              "radial-gradient(45% 60% at 80% 70%, rgba(167,139,250,0.10) 0%, transparent 70%)",
+              "radial-gradient(50% 65% at 78% 70%, rgba(167,139,250,0.18) 0%, transparent 70%)",
           }}
         />
         {/* Heavy grain over the whole footer */}
         <div className="grain grain-heavy absolute inset-0" />
-        {/* Fade to bg at edges */}
-        <div className="absolute inset-0 bg-gradient-to-t from-bg via-bg/85 to-bg/60" />
+        {/* Fade to bg at top edge so it transitions cleanly from the section above */}
+        <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-bg to-transparent" />
       </div>
 
       <div className="relative mx-auto max-w-[1280px] px-6 py-20 lg:px-10">
@@ -84,10 +84,10 @@ export function Footer() {
           <FooterColumn
             title="Resources"
             links={[
-              ["Docs", "#"],
-              ["Changelog", "#"],
-              ["Status", "#"],
-              ["GitHub", "https://github.com/relay-llm/sdk"],
+              ["Docs", "https://github.com/relay-llm/sdk#readme"],
+              ["Changelog", "https://github.com/relay-llm/sdk/releases"],
+              ["GitHub", "https://github.com/relay-llm"],
+              ["npm", "https://www.npmjs.com/package/@relay-api/sdk"],
             ]}
           />
           <FooterColumn
